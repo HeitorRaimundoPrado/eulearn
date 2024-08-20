@@ -3,14 +3,14 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { apiGet } from '@/utils/api'
+import Subject from '@/interfaces/Subject'
 
 export default function Home() {
-  const [subjects, setSubjects] = useState([])
+  const [subjects, setSubjects] = useState<Subject[]>([])
 
   useEffect(() => {
     apiGet("subjects")
     .then(data => {
-      console.log(data)
       setSubjects(data)
     })
     .catch(err => alert(err))

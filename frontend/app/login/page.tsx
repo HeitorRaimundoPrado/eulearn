@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react"
+import { FormEvent, useState } from "react"
 
 export default function Page() {
   const [form, setForm] = useState({
@@ -8,7 +8,7 @@ export default function Page() {
     password: ""
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/token`, {
       method: "POST",

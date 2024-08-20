@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from 'react';
-import { apiPost } from "@/utils/api.ts";
+import { useState, FormEvent } from 'react';
+import { apiPost } from "@/utils/api";
 
-export default function newPostForm() {
+export default function NewPostForm() {
   const [form, setForm] = useState({
     title: "",
     content: "",
-    parent_post: null,
-    author_id: 1
+    parent_post: null
   })
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     apiPost("posts/", form);
   }

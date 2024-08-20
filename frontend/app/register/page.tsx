@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react'
+import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Page() {
@@ -12,7 +12,7 @@ export default function Page() {
 
   const router = useRouter()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/register`, {
       method: "POST", 

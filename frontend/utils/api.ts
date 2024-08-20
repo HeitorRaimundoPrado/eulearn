@@ -25,27 +25,33 @@ async function refreshToken() {
   })
 }
 
-async function makeRequest(route: str, method: str, isRec: bool = false, body: any = {}) {
+async function makeRequest(route: string, method: string, isRec: boolean = false, body: any = {}) {
   return new Promise<any>((resolve, reject) => {
     if (window === null || window === undefined) {
       reject(new Error("api helpers should only be called from client"));
     }
 
-    let fetchOptions = {
+    let fetchOptions: {
+      method: string,
+      headers: {
+        "Authorization": string,
+        "Content-Type"?: string
+      }
+      body?: string
+    } = {
         method: method,
         headers: {
           "Authorization": `Bearer ${window.localStorage.getItem("access_token")}`
         }
     }
 
-    if (method !== "GET" && body !== {} && body !== null && body !== undefined)  {
+    if (method !== "GET" && Object.keys(body).length !== 0 && body !== null && body !== undefined)  {
       fetchOptions.body = JSON.stringify(body)
       fetchOptions.headers["Content-Type"] = "application/json"
     }
 
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/${route}`, fetchOptions)
     .then(res => {
-      console.log(res)
       if (res.ok) {
         resolve(res.json());
       }
@@ -63,10 +69,10 @@ async function makeRequest(route: str, method: str, isRec: bool = false, body: a
   });
 }
 
-export async function apiGet(route: str) {
+export async function apiGet(route: string) {
   return makeRequest(route, "GET");
 }
 
-export async function apiPost(route: str, body: any) {
+export async function apiPost(route: string, body: any) {
   return makeRequest(route, "POST",  false, body)
 }

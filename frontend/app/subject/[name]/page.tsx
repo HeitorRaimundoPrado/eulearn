@@ -1,6 +1,12 @@
 import Link from 'next/link';
 
-export default function Page({ params }) {
+type PageProps = {
+  params: {
+    name: string
+  }
+}
+
+export default function Page({ params }: PageProps) {
   const { name } = params;
   return (
     <div>

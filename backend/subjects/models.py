@@ -4,7 +4,10 @@ import random
 import string
 
 def generate_unique_slug():
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+    while True:
+        slug = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+        if not ForumPost.objects.filter(url=slug).exists():
+            return slug
 
 # Create your models here.
 class Subject(models.Model):
@@ -20,9 +23,17 @@ class ForumPost(models.Model):
     title = models.CharField(max_length=100, blank=True)
     content = models.TextField()
     parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
-    author_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now_add=True)
     url = models.CharField(unique=True, default=generate_unique_slug)
-    votes = models.IntegerField(default=0)
 
+class Votes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="votes")
+    positive = models.BooleanField()
+    post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name="votes")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name='unique_post_user')
+        ]
