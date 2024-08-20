@@ -17,7 +17,7 @@ export default async function Page({ params }: PageProps) {
       <ul>
         {
         latestPosts.map(post => { 
-        return <li key={post.id}><Link href={`/subject/${name}/forum/post/${post.url}`}>
+        return <li key={post.id}><Link href={`/subject/${name}/forum/post/${post.route}`}>
             <h2>{post.title}</h2>
             <p className="h-5 overflow-ellipsis" >{post.content}</p>
           </Link></li>
