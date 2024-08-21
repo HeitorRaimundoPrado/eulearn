@@ -8,6 +8,7 @@ export default function Page({ params }) {
   const { name } = params;
   const [question, setQuestion] = useState({
     statement: "",
+    explanation: ""
   })
 
   const [subject, setSubject] = useState(null);
@@ -51,6 +52,17 @@ export default function Page({ params }) {
   }
 
   const createQuestion = () => {
+    let is_valid = 0;
+    for (const answer of answers) {
+      if (answer.is_correct == true) {
+        is_valid++;
+      }
+    }
+
+    if (is_valid !== 1) {
+      alert("Sua pergunta deve ter exatamente uma resposta correta!")
+    }
+
     apiPost('questions/', {
      ...question,
      answers: answers,
@@ -67,6 +79,11 @@ export default function Page({ params }) {
       <div>
         <label>Enunciado da Questão</label>
         <input type="text" onChange={e => setQuestion({...question, statement: e.target.value})}/>
+      </div>
+
+      <div>
+        <label>Explicação</label>
+        <textarea onChange={e => setQuestion({...question, explanation: e.target.value})}/>
       </div>
 
       {

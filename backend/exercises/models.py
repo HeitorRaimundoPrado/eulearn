@@ -18,6 +18,7 @@ class Question(models.Model):
     statement_img_url = models.CharField(max_length=80, blank=True, null=True)
     author = models.ForeignKey(User, related_name="questions", on_delete=models.SET_NULL, null=True)
     route = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    explanation = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     subject = models.ForeignKey(Subject, related_name="questions", on_delete=models.CASCADE)
 

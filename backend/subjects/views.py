@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.exceptions import NotFound, ValidationError
 from django.db import models
 from .models import ForumPost, Subject, Votes
@@ -59,6 +59,11 @@ class PostListView(viewsets.ModelViewSet):
 class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [IsAdminUser()]
+
+        return [AllowAny()]
 
 class VotesView(generics.ListCreateAPIView):
     queryset = Votes.objects.all()
