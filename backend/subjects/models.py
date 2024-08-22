@@ -7,7 +7,7 @@ import string
 class Subject(models.Model):
     description = models.TextField()
     name = models.CharField(max_length=50)
-    route = models.CharField(max_length=50)
+    route = models.UUIDField(default=uuid.uuid4, unique=True)
 
 class Forum(models.Model):
     description = models.TextField()

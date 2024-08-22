@@ -63,6 +63,23 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware'
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000'
+]
+
+CORS_ALLOW_CREDENTIALS = True 
+IS_DEVELOPMENT = os.getenv('DJANGO_DEVELOPMENT', 'False') == 'True'
+
+if IS_DEVELOPMENT:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:3000'
+    ]
+
+else:
+    CSRF_TRUSTED_ORIGINS = [
+    ]
+
+print(CSRF_TRUSTED_ORIGINS)
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
 ]

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 async function getSubjId(name) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/subjects/?name=${name}`, { cache: "no-store" })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/subject/${name}`, { cache: "no-store" })
   const data  = await res.json();
   if (data.length === 1) {
     return data[0];

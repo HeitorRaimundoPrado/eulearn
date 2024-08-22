@@ -1,3 +1,5 @@
+import Cookie from 'js-cookie'
+
 async function refreshToken() {
   return new Promise<any>((resolve, reject) => {
 
@@ -47,7 +49,9 @@ async function makeRequest(route: string, method: string, isRec: boolean = false
 
     if (method !== "GET" && Object.keys(body).length !== 0 && body !== null && body !== undefined)  {
       fetchOptions.body = JSON.stringify(body)
+      fetchOptions.credentials = "include";
       fetchOptions.headers["Content-Type"] = "application/json"
+      fetchOptions.headers['X-CSRFToken'] = Cookie.get('csrftoken')
     }
 
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/${route}`, fetchOptions)

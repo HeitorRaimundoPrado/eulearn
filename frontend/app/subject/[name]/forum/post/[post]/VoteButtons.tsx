@@ -1,10 +1,27 @@
 "use client";
 
-import { useState } from 'react'
-import { apiPost } from '@/utils/api'
+import { useEffect, useState } from 'react'
+import { apiPost, apiGet } from '@/utils/api'
+
+enum VotingOptions {
+ Downvote = -1,
+ Novote,
+ Upvote
+}
 
 export default function VoteButtons({ post, net_votes }) {
   const [votes, setVotes] = useState(net_votes);
+  const [hasVoted, setHasVoted] = useState(null);
+
+  useEffect(() => {
+    apiGet(`user/vote/${post}`)
+    .then(data => {
+      setHasVoted(data.positive ? VotingOptions.Upvote : VotingOptions.Downvote)
+    })
+    .catch(err => {
+      setHasVoted(VotingOptions.Novote)
+    })
+  }, [])
 
   const handleUpvote = (e) => {
     apiPost("votes/", {
@@ -12,8 +29,8 @@ export default function VoteButtons({ post, net_votes }) {
       positive: true
     })
     .then(data => {
-      console.log(data);
-      setVotes(old => old + 1)
+      setVotes(old => old + 1 * (hasVoted === VotingOptions.Downvote ? 2 : 1))
+      setHasVoted(VotingOptions.Upvote)
     })
   }
 
@@ -23,8 +40,8 @@ export default function VoteButtons({ post, net_votes }) {
       positive: false
     })
     .then(data => {
-      console.log(data);
-      setVotes(old => old - 1)
+      setVotes(old => old - 1 * (hasVoted === VotingOptions.Upvote ? 2 : 1))
+      setHasVoted(VotingOptions.Downvote)
     })
   }
 

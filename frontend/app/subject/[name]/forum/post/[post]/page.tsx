@@ -6,20 +6,25 @@
 
   export default async function Page({ params }: PageProps) {
   const { name, post } = params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts/?url=${post}`, { cache: 'no-store' } )
-  const data = await res.json();
-  const postContent = data.results.length > 0 ? data.results[0] : undefined;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/post/${post}`, { cache: 'no-store' } )
+    const data = await res.json();
 
-  return (
-    <div>
-     {
-      postContent &&
-      <>
-      <h1>{postContent.title}</h1>
-      <p>{postContent.content}</p>
-      <VoteButtons post={postContent.id} net_votes={postContent.net_votes}/>
-      </>
-    }
+    return (
+      <div>
+        <h1>{data.title}</h1>
+        <p>{data.content}</p>
+        <VoteButtons post={data.id} net_votes={data.net_votes}/>
     </div>
-  )
+    )
+  }
+
+  catch(err) {
+    return (
+      <div>
+        <h1>Ocorreu um problema ao buscar esse post</h1>
+        <p>Tem certeza de que a url está correta?</p>
+      </div>
+    )
+  }
 }

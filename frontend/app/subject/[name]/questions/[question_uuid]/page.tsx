@@ -10,17 +10,15 @@ export default function Page({params}) {
   const [explanation, setExplanation] = useState("");
   
   useEffect(() => {
-    apiGet(`questions/?route=${question_uuid}`)
+    apiGet(`question/${question_uuid}`)
     .then(data => {
-      console.log(data)
-      if (data.length === 1) {
-        setQuestion(data[0])
-        setSelectedAns(data[0].answers[0].id)
-        return
-      }
-
+      setQuestion(data)
+      setSelectedAns(data.answers[0].id)
+    })
+    .catch(err => {
       alert("Você está tentando acessar uma questão que não existe!!")
     })
+
   }, [])
 
   const handleCheckAnswer = () => {
@@ -36,14 +34,12 @@ export default function Page({params}) {
   }
 
   const handleExplanation = () => {
-    apiGet(`questions/?route=${question_uuid}&get_explanation=1`)
+    apiGet(`question/${question_uuid}?get_explanation=1`)
     .then(data => {
-      if (data.length !== 1) {
-        alert('Algo aconteceu e não fomos capazes de achar a explicação para essa questão!')
-        return;
-      }
-
-      setExplanation(data[0].explanation);
+        setExplanation(data.explanation);
+    })
+    .catch(err => {
+      alert('Algo aconteceu e não fomos capazes de achar a explicação para essa questão!')
     })
   }
 

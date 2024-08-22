@@ -9,11 +9,12 @@ import uuid
 class Test(models.Model):
     title = models.CharField(max_length=80)
     author = models.ForeignKey(User, related_name="tests", on_delete=models.SET_NULL, null=True)
+    route = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     subject = models.ForeignKey(Subject, related_name="tests", on_delete=models.CASCADE)
 
 class Question(models.Model):
-    tests = models.ManyToManyField(Test, blank=True)
+    tests = models.ManyToManyField(Test, blank=True, related_name="questions")
     statement = models.TextField(blank=True, null=True)
     statement_img_url = models.CharField(max_length=80, blank=True, null=True)
     author = models.ForeignKey(User, related_name="questions", on_delete=models.SET_NULL, null=True)

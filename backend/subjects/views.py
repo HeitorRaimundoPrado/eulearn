@@ -7,6 +7,35 @@ from django.db import models
 from .models import ForumPost, Subject, Votes
 from .serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer
 
+class PostRetrieveView(generics.RetrieveAPIView):
+    serializer_class = PostDetailSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = ForumPost.objects.annotate(
+            net_votes = models.functions.Coalesce(
+                models.Sum(
+                    models.Case(
+                        models.When(votes__positive=True, then=1),
+                        models.When(votes__positive=False, then=-1),
+                        output_field=models.IntegerField(),
+                    )
+                ),
+                0
+            )
+        ).order_by('-created_at')
+        
+        author = self.request.query_params.get('author_id')
+        url = self.request.query_params.get('url')
+
+        if author:
+            queryset = queryset.filter(author=author)
+
+        if url:
+            queryset = queryset.filter(url=url)
+
+        return queryset
+
 class PostPaginationClass(PageNumberPagination):
     page_size = 40
 
@@ -35,8 +64,6 @@ class PostListView(viewsets.ModelViewSet):
 
         if url:
             queryset = queryset.filter(url=url)
-            
-        print(vars(queryset[0]))
 
         return queryset
 
@@ -56,6 +83,7 @@ class PostListView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user)
 
+
 class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
@@ -64,6 +92,10 @@ class SubjectListView(generics.ListAPIView):
             return [IsAdminUser()]
 
         return [AllowAny()]
+
+class SubjectRetrieveView(generics.RetrieveAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
 
 class VotesView(generics.ListCreateAPIView):
     queryset = Votes.objects.all()
