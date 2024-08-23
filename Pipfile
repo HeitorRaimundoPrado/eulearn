@@ -10,6 +10,8 @@ python-dotenv = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
+channels-redis = "*"
+channels = {extras = ["daphne"], version = "*"}
 
 [dev-packages]
 

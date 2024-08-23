@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'register',
     'user',
     'subjects',
-    'exercises'
+    'exercises',
+    'channels',
+    'chat_messages'
 ]
 
 MIDDLEWARE = [
@@ -182,3 +184,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = (
     'emailauth.EmailBackend',
  )
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": ["redis://127.0.0.1:6379/1"]
+        }
+    }
+}
+
+ASGI_APPLICATION = 'backend.asgi.application'

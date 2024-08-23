@@ -20,7 +20,7 @@ export default function Home() {
     <div>
       {
         subjects.map(subject => {
-          return <Link key={subject.id} href={`/subject/${subject.route}`}>{subject.name}</Link>
+          return <Link key={subject.id} href={`/subject/${subject.id}`}>{subject.name}</Link>
         })
       }
     </div>

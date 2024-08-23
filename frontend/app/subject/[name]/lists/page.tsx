@@ -50,7 +50,7 @@ export default  function Page({ params }) {
       {
         tests.map(t => {
           return (
-            <Link key={t.id} href={`/subject/${name}/test/${t.route}`}>{t.title}</Link>
+            <Link key={t.id} href={`/subject/${name}/test/${t.id}`}>{t.title}</Link>
           )}
         )
       }
