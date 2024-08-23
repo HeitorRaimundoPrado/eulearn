@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'subjects',
     'exercises',
     'channels',
-    'chat_messages'
+    'chat_messages',
+    'communities'
 ]
 
 MIDDLEWARE = [

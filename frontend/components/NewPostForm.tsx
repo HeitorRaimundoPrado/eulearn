@@ -3,11 +3,13 @@
 import { useState, FormEvent } from 'react';
 import { apiPost } from "@/utils/api";
 
-export default function NewPostForm() {
+export default function NewPostForm({ is_private, community }) {
   const [form, setForm] = useState({
     title: "",
     content: "",
-    parent_post: null
+    parent_post: null,
+    private: is_private, 
+    community: community
   })
   
   const handleSubmit = (e: FormEvent) => {

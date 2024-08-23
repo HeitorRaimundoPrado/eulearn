@@ -1,4 +1,4 @@
-import NewPostForm from './NewPostForm'
+import NewPostForm from '@/components/NewPostForm'
 import Link from 'next/link'
 import Post from '@/interfaces/Post'
 import UserLinkContext from '@/components/UserLinkContext'
@@ -8,7 +8,7 @@ type PageProps = {
 }
 export default async function Page({ params }: PageProps) {
   const { name } = params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts`, { cache: "no-store" })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts?subj=${name}`, { cache: "no-store" })
   const data = await res.json();
   const latestPosts: Post[] = await Promise.all(data.results.map(async p => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/user/${p.author_id}`)
@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div>
-      <NewPostForm/>
+      <NewPostForm is_private={false} community={null}/>
       <ul>
         {
         latestPosts.map(post => { 

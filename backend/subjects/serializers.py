@@ -4,7 +4,7 @@ from .models import ForumPost, Subject, Votes
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForumPost
-        fields = ['title', 'content', 'parent_post']
+        fields = ['title', 'content', 'parent_post', 'private', 'community', 'id']
 
 class PostDetailSerializer(serializers.ModelSerializer):
     net_votes = serializers.IntegerField()

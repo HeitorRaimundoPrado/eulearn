@@ -4,37 +4,26 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.exceptions import NotFound, ValidationError
 from django.db import models
+from communities.permissions import IsMemberOfCommunity
 from .models import ForumPost, Subject, Votes
 from .serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer
 
 class PostRetrieveView(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        queryset = ForumPost.objects.annotate(
-            net_votes = models.functions.Coalesce(
-                models.Sum(
-                    models.Case(
-                        models.When(votes__positive=True, then=1),
-                        models.When(votes__positive=False, then=-1),
-                        output_field=models.IntegerField(),
-                    )
-                ),
-                0
-            )
-        ).order_by('-created_at')
+    permission_classes = [IsMemberOfCommunity]
+    queryset = ForumPost.objects.annotate(
+        net_votes = models.functions.Coalesce(
+            models.Sum(
+                models.Case(
+                    models.When(votes__positive=True, then=1),
+                    models.When(votes__positive=False, then=-1),
+                    output_field=models.IntegerField(),
+                )
+            ),
+            0
+        )
+    ).order_by('-created_at')
         
-        author = self.request.query_params.get('author_id')
-        url = self.request.query_params.get('url')
-
-        if author:
-            queryset = queryset.filter(author=author)
-
-        if url:
-            queryset = queryset.filter(url=url)
-
-        return queryset
 
 class PostPaginationClass(PageNumberPagination):
     page_size = 40
@@ -54,16 +43,17 @@ class PostListView(viewsets.ModelViewSet):
                 ),
                 0
             )
-        ).order_by('-created_at')
+        ).order_by('-created_at').filter(private=False)
         
         author = self.request.query_params.get('author_id')
-        url = self.request.query_params.get('url')
+        subj = self.request.query_params.get('subj')
 
         if author:
             queryset = queryset.filter(author=author)
 
-        if url:
-            queryset = queryset.filter(url=url)
+        if subj:
+            queryset = queryset.filter(subject=subj)
+
 
         return queryset
 
@@ -76,6 +66,8 @@ class PostListView(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == "POST":
+            if self.request.data.get('community'):
+                return [IsMemberOfCommunity()]
             return [IsAuthenticated()]
 
         return [AllowAny()]
@@ -108,6 +100,12 @@ class VotesView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "POST":
+            post_id = self.request.data.get('post')
+            post = ForumPost.objects.get(id=post_id)
+
+            if post.community:
+                return [IsMemberOfCommunity()]
+
             return [IsAuthenticated()]
 
         return [AllowAny()]

@@ -1,4 +1,4 @@
-  import VoteButtons from './VoteButtons'
+  import VoteButtons from '@/components/VoteButtons'
 
   type PageProps = {
     params: { name: string, post: string }
