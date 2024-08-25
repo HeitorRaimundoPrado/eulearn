@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div>
-      <NewPostForm is_private={false} community={null}/>
+      <NewPostForm is_private={false} subject={name}/>
       <ul>
         {
         latestPosts.map(post => { 

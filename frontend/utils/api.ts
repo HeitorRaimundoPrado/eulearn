@@ -27,7 +27,7 @@ async function refreshToken() {
   })
 }
 
-async function makeRequest(route: string, method: string, isRec: boolean = false, body: any = {}) {
+async function makeRequest(route: string, method: string, isRec: boolean = false, body: any = {}, isFormData: boolean = false) {
   return new Promise<any>((resolve, reject) => {
     if (window === null || window === undefined) {
       reject(new Error("api helpers should only be called from client"));
@@ -47,13 +47,16 @@ async function makeRequest(route: string, method: string, isRec: boolean = false
         }
     }
 
-    if (method !== "GET" && Object.keys(body).length !== 0 && body !== null && body !== undefined)  {
-      fetchOptions.body = JSON.stringify(body)
+    if (method !== "GET" && body !== null && body !== undefined)  {
+      fetchOptions.body = isFormData ? body : JSON.stringify(body);
       fetchOptions.credentials = "include";
-      fetchOptions.headers["Content-Type"] = "application/json"
+      if (!isFormData) {
+        fetchOptions.headers["Content-Type"] =  "application/json"
+      }
       fetchOptions.headers['X-CSRFToken'] = Cookie.get('csrftoken')
     }
 
+    console.log(fetchOptions)
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/${route}`, fetchOptions)
     .then(res => {
       if (res.ok) {
@@ -77,6 +80,6 @@ export async function apiGet(route: string) {
   return makeRequest(route, "GET");
 }
 
-export async function apiPost(route: string, body: any) {
-  return makeRequest(route, "POST",  false, body)
+export async function apiPost(route: string, body: any, isFormData: boolean) {
+  return makeRequest(route, "POST",  false, body, isFormData)
 }

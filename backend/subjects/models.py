@@ -30,3 +30,8 @@ class Votes(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'post'], name='unique_post_user')
         ]
+
+class PostAttachment(models.Model):
+    post = models.ForeignKey(ForumPost, related_name='attachments', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)

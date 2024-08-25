@@ -9,10 +9,14 @@ class IsMemberOfCommunity(permissions.BasePermission):
 
         if not community_id and not post_id:
             return False
-            
+
         if not community_id:
             try:
                 post = ForumPost.objects.get(id=post_id)
+
+                if post.community == None:
+                    return True
+
                 community = post.community
 
             except ForumPost.DoesNotExist:
@@ -25,8 +29,10 @@ class IsMemberOfCommunity(permissions.BasePermission):
             except Community.DoesNotExist:
                 return False
 
+        if not community.private:
+            return True
 
         return request.user in community.users_joined.all()
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated
+        return True

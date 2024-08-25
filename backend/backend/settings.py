@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'storages',
     'corsheaders',
     'register',
     'user',
@@ -175,7 +176,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -196,3 +198,61 @@ CHANNEL_LAYERS = {
 }
 
 ASGI_APPLICATION = 'backend.asgi.application'
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": 'minioadmin',
+            "secret_key": 'minioadmin',
+            "bucket_name": 'my-bucket',
+            "endpoint_url": 'http://localhost:9000',
+            "default_acl": None,
+            "file_overwrite": False
+        },
+    },
+
+    "staticfiles": "storages.backend.s3.S3Storage",
+    "OPTIONS": {
+        "access_key": 'minioadmin',
+        "secret_key": 'minioadmin',
+        "bucket_name": 'static',
+        "endpoint_url": 'http://localhost:9000',
+        "default_acl": None,
+        "file_overwrite": False
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/2',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        }
+    }
+
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'backend.custom_debug': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

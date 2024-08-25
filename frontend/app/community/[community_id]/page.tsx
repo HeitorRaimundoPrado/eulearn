@@ -1,8 +1,4 @@
-"use client"
-
-import { useState, useEffect } from 'react'
-import { apiGet, apiPost } from '@/utils/api'
-import NewPostForm from '@/components/NewPostForm';
+NewPostForm from '@/components/NewPostForm';
 import Link from 'next/link'
 
 function JoinCommunityForm ({ communityId, successCallback }) {

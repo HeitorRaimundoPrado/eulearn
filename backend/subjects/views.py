@@ -3,26 +3,30 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.db import models
 from communities.permissions import IsMemberOfCommunity
-from .models import ForumPost, Subject, Votes
-from .serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer
+from .models import ForumPost, Subject, Votes, PostAttachment
+from .serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer, PostAttachmentSerializer
+from django.http import HttpResponse, Http404
+from django.conf import settings
+import boto3
+from botocore.exceptions import NoCredentialsError
+
+class PostAttachmentUploadView(APIView):
+    parser_classes = [MultiPartParser]
+    def post(self, request, *args, **kwargs):
+        serializer = PostAttachmentSerializer(data=request.data)
+        if serializer.is_valid():
+            file_instance = serializer.save()
+            return Response({'file_id': file_instance.id}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostRetrieveView(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
     permission_classes = [IsMemberOfCommunity]
-    queryset = ForumPost.objects.annotate(
-        net_votes = models.functions.Coalesce(
-            models.Sum(
-                models.Case(
-                    models.When(votes__positive=True, then=1),
-                    models.When(votes__positive=False, then=-1),
-                    output_field=models.IntegerField(),
-                )
-            ),
-            0
-        )
-    ).order_by('-created_at')
+    queryset = ForumPost.objects.all()
         
 
 class PostPaginationClass(PageNumberPagination):
@@ -32,18 +36,7 @@ class PostListView(viewsets.ModelViewSet):
     pagination_class = PostPaginationClass
 
     def get_queryset(self):
-        queryset = ForumPost.objects.annotate(
-            net_votes = models.functions.Coalesce(
-                models.Sum(
-                    models.Case(
-                        models.When(votes__positive=True, then=1),
-                        models.When(votes__positive=False, then=-1),
-                        output_field=models.IntegerField(),
-                    )
-                ),
-                0
-            )
-        ).order_by('-created_at').filter(private=False)
+        queryset = ForumPost.objects.order_by('-created_at').filter(private=False).all()
         
         author = self.request.query_params.get('author_id')
         subj = self.request.query_params.get('subj')
@@ -53,7 +46,6 @@ class PostListView(viewsets.ModelViewSet):
 
         if subj:
             queryset = queryset.filter(subject=subj)
-
 
         return queryset
 
@@ -133,3 +125,26 @@ class VotesView(generics.ListCreateAPIView):
         serializer.save(user=user)
 
         serializer.save(user=self.request.user)
+
+
+
+def download_file(request, file_key):
+    s3_client = boto3.client(
+        's3',
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    )
+    
+    try:
+        file_url = s3_client.generate_presigned_url('get_object',
+            Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': file_key},
+            ExpiresIn=3600)
+        
+        response = HttpResponse()
+        response['Location'] = file_url
+        response.status_code = 302
+        return response
+
+    except NoCredentialsError:
+        raise Http404("File not found or invalid credentials")
