@@ -7,10 +7,10 @@
 
   export default async function Page({ params }: PageProps) {
   const { name, post } = params;
+
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/post/${post}`, { cache: 'no-store' } )
     const data = await res.json();
-    console.log(data)
 
     return (
       <div>

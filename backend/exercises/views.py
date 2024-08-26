@@ -1,8 +1,11 @@
 from django.db import models
+from django.db.models.functions import Coalesce
+from django.db.models import F, Count, Max, Func, Value, Q
 from django.http import JsonResponse
+from django.core.cache import cache
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Question, Answer, Test
+from .models import Question, Answer, Test, QuestionVotes, TestVotes
 from .serializers import QuestionSerializer, AnswerSerializer, TestCreateSerializer, TestRetrieveSerializer, QuestionSerializerNoExplanation
 import json
 
@@ -73,6 +76,51 @@ def check_test(request):
     for question_id, answer_id in body.items():
         res_dict = dict()
         question = Question.objects.only('answers', 'explanation').get(pk=question_id)
+        
+        user_prof = request.user.profile
+
+        correct_answers = cache.get('correct_answers_{question_id}', 0)
+        incorrect_answers = cache.get('incorrect_answers_{question_id}', 0)
+
+        CIMax = cache.get("ci_max", 1)
+
+        CIq = incorrect_answers / max(correct_answers, 1)
+        if CIq > CIMax:
+            CIMax = CIq
+            cache.set('ci_max', CIq)
+
+        NVMax = QuestionVotes.objects.values('question').annotate(
+            positive_count=Count('id', filter=Q(positive=True)),
+            negative_count=Count('id', filter=Q(positive=False))
+        ).annotate(
+            ratio=Coalesce(F('positive_count'), Value(1)) / Coalesce(F('negative_count'), Value(1))
+        ).aggregate(Max('ratio'))['ratio__max'] or 1
+
+        votes_for_question = QuestionVotes.objects.filter(question=question)
+        positive_votes_q = votes_for_question.filter(positive=True).count()
+        negative_votes_q = votes_for_question.filter(positive=False).count()
+
+        NVq = positive_votes_q / max(negative_votes_q, 1)
+
+        import math
+        print(NVq)
+        print(NVMax)
+        print(CIq)
+        print(CIMax)
+
+        Pq = max(100 * math.sqrt(NVq) / math.sqrt(NVMax) * math.sqrt(CIq) / math.sqrt(CIMax), 10)
+
+        print(Pq)
+        PUmax = cache.get('pu_max', 1000)
+        Pu = user_prof.rating
+
+        from decimal import Decimal
+
+        RD = Decimal(Pq) * (Decimal(1) - Decimal(Pu) / Decimal(PUmax) * Decimal(0.95) + Decimal(1))
+
+        print(RD)
+
+        
         res_dict['explanation'] = question.explanation
         for a in question.answers.all():
             if a.is_correct:
@@ -83,11 +131,17 @@ def check_test(request):
 
         if not 'correct' in res_dict:
             res_dict['correct'] = False
+            user_prof.rating -= Decimal(0.8) * RD
+
+        else:
+            user_prof.rating += RD
+
+        user_prof.save()
 
         ans = Answer.objects.only('content').get(pk=answer_id)
         res_dict['user_ans'] = ans.content
         res_dict['question'] = question_id
         res_list.append(res_dict)
 
-    return JsonResponse({ 'test_result': res_list})
+    return JsonResponse({ 'test_result': res_list, 'new_rating': user_prof.rating })
 

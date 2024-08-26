@@ -213,14 +213,16 @@ STORAGES = {
         },
     },
 
-    "staticfiles": "storages.backend.s3.S3Storage",
-    "OPTIONS": {
-        "access_key": 'minioadmin',
-        "secret_key": 'minioadmin',
-        "bucket_name": 'static',
-        "endpoint_url": 'http://localhost:9000',
-        "default_acl": None,
-        "file_overwrite": False
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": 'minioadmin',
+            "secret_key": 'minioadmin',
+            "bucket_name": 'static',
+            "endpoint_url": 'http://localhost:9000',
+            "default_acl": None,
+            "file_overwrite": False
+        }
     },
 }
 

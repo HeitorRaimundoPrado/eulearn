@@ -2,6 +2,12 @@
 import './globals.css'
 import { Metadata } from 'next';
 import NavBar from '@/components/NavBar'
+import SideMenu from '@/components/SideMenu'
+
+import { Inter } from 'next/font/google'
+ 
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} bg-primary-gray text-white flex flex-col h-full`} >
         <NavBar/>
-        {children}
+        <div className="flex flex-row h-full">
+        <SideMenu/>
+        <div className="m-4">
+          {children}
+        </div>
+        </div>
       </body>
     </html>
   );

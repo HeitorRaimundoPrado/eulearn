@@ -26,19 +26,19 @@ export default function Home() {
 
 
   return (
-    <div>
-      <h2>Disciplinas Oficiais</h2>
-      <ul className="my-2">
+    <div className="[&_h2]:opacity-[80%] [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:uppercase">
+      <h2 >Disciplinas Oficiais</h2>
+      <ul className="my-2 flex flex-col p-4">
         {
           subjects.map(subject => {
-            return <Link key={subject.id} href={`/subject/${subject.id}`}>{subject.name}</Link>
+            return <Link key={subject.id} href={`/subject/${subject.id}`} className="mb-4 opacity-[60%] hover:text-primary-color hover:opacity-[100%] hover:underline transition-all ease-in-out duration-200">{subject.name}</Link>
           })
         }
       </ul>
 
       <h2>Comunidades Não-Oficiais</h2>
-      <div>
-        <Link href="create-community">Criar comunidade</Link>
+      <div className="flex flex-col mt-4">
+        <Link href="create-community" className="bg-primary-color rounded-md p-4 w-fit">Criar comunidade</Link>
         <ul>
           {
             privateCommunities.map(community => {
@@ -54,7 +54,6 @@ export default function Home() {
                 }
               </div>
             )
-
             })
           }
         </ul>
