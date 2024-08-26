@@ -1,4 +1,5 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
+const { colors: defaultColors } = require('tailwindcss/defaultTheme');
 
 const config = {
   darkMode: ["class"],
@@ -19,6 +20,15 @@ const config = {
     },
     extend: {
       colors: {
+        white: {
+          100: "rgb(255, 255, 255, 1)", // 100% opacity
+          80: "rgb(255, 255, 255, 0.8)", // 80% opacity
+          60: "rgb(255, 255, 255, 0.6)", // 60% opacity
+          40: "rgb(255, 255, 255, 0.4)", // 40% opacity
+          20: "rgb(255, 255, 255, 0.2)", // 20% opacity
+          10: "rgb(255, 255, 255, 0.1)", // 10% opacity
+          5: "rgb(255, 255, 255, 0.04)"  // 4% opacity
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
