@@ -3,9 +3,13 @@
 
 import { useEffect, useState } from 'react';
 import { apiPost, apiGet } from '@/utils/api';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Answer from '@/interfaces/Answer';
+import Input from '@/components/Input';
+import Textarea from '@/components/Textarea';
+import { Label } from "@/components/ui/label"
 
-export default function CreateQuestion({ subjId, createQuestionCallback }) {
+export default function CreateQuestion({ subjId, createQuestionCallback, className="" }) {
   const [question, setQuestion] = useState({
     statement: "",
     explanation: ""
@@ -37,6 +41,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback }) {
 
     answers_[idx].is_correct = true;
     setAnswers(answers_)
+    console.log(answers_)
   }
 
   const createQuestion = () => {
@@ -62,33 +67,36 @@ export default function CreateQuestion({ subjId, createQuestionCallback }) {
   }
 
   return (
-    <div>
-      <div>
-        <label>Enunciado da Questão</label>
-        <input type="text" onChange={e => setQuestion({...question, statement: e.target.value})}/>
+    <div className={`${className} [&>*]:w-full`}>
+      <div className="mb-4">
+        <Input placeholder={"Enunciado"} onChange={e => setQuestion({...question, statement: e.target.value})} className="w-[60%]"/>
       </div>
 
-      <div>
-        <label>Explicação</label>
-        <textarea onChange={e => setQuestion({...question, explanation: e.target.value})}/>
+      <div className="mb-4">
+        <Textarea onChange={e => setQuestion({...question, explanation: e.target.value})} placeholder={"Explicação"} className="h-56 w-[60%]"/>
       </div>
 
-      {
-        answers.map((answer, idx) => (
-          <div className="flex flex-row" key={idx}>
-            <label>{answer.content}</label>
-            <input type="radio" name="isCorrect" onChange={() => handleChangeCorrect(idx)} checked={answer.is_correct}/>
-          </div>
-        ))
+      <RadioGroup className="my-2 px-4 p-2" onValueChange={handleChangeCorrect}>
+        {
+          answers.map((answer, idx) => (
+            <div className="flex flex-row mb-2 w-[4%] justify-between items-center" key={idx}>
+              <RadioGroupItem id={`answer_${idx}`} name="isCorrect" value={idx} checked={answer.is_correct}/>
+              <Label htmlFor={`answer_${idx}`} className="text-left grow ml-4">{answer.content}</Label>
+            </div>
+          ))
 
-      }
+        }
+      </RadioGroup>
             
-      <input onChange={(e) => setNewAnswer(ans => {
-          return {...ans, content: e.target.value}
-        })}/>
+      <div className="flex flex-row justify-between !w-[60%]">
+        <Input onChange={(e) => setNewAnswer(ans => {
+            return {...ans, content: e.target.value}
+          })} className="w-[60%]" placeholder="Nova Resposta"
+          />
 
-      <button onClick={addAnswer}>Adicionar nova resposta</button>
-      <button onClick={createQuestion}>Criar Questão</button>
+        <button onClick={addAnswer} className="bg-secondary p-2 rounded-md border-2 border-white border-opacity-[20%]">Adicionar nova resposta</button>
+      </div>
+      <button className="!w-fit bg-accent p-2 border-2 border-white border-opacity-[20%] rounded-md mt-4" onClick={createQuestion}>Criar Questão</button>
     </div>
   )
 }
