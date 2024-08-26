@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} bg-primary-gray text-white flex flex-col h-full`} >
+      <body className={`${inter.className} bg-primary-gray text-white-100 flex flex-col h-full`} >
         <NavBar/>
         <div className="flex flex-row h-full">
         <SideMenu/>
