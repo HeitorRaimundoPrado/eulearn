@@ -14,12 +14,10 @@
 
     return (
       <div>
-        <h1>{data.title}</h1>
-        <p>{data.content}</p>
+        <h1 className="font-bold text-2xl my-2">{data.title}</h1>
+        <p className="text-justify w-[70%]">{data.content}</p>
         {
           data.attachments.map(att => {
-            console.log(att)
-            console.log(att.file)
             return <img src={att.file} alt="Não foi possível carregar a imagem"/>
           })
         }

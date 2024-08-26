@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { apiPost, apiGet } from '@/utils/api'
+import { IoArrowUpOutline, IoArrowDownOutline } from "react-icons/io5";
 
 enum VotingOptions {
  Downvote = -1,
@@ -46,10 +47,12 @@ export default function VoteButtons({ post, net_votes }) {
   }
 
   return (
-    <div>
+    <div className="flex flex-row items-center bg-secondary w-fit p-2 px-4 rounded-md mt-6">
+      <div className="flex flex-col">
+        <button className={`mr-4 mb-[2px] ${hasVoted === VotingOptions.Upvote ? "text-primary" : "" }`}onClick={handleUpvote}><IoArrowUpOutline/></button>
+        <button className={`${hasVoted === VotingOptions.Downvote ? "text-primary" : "" }`}onClick={handleDownvote}><IoArrowDownOutline/></button>
+      </div>
       <p>{votes}</p>
-      <button onClick={handleUpvote}>Upvote</button>
-      <button onClick={handleDownvote}>Downvote</button>
     </div>
   )
 }

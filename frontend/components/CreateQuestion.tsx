@@ -12,7 +12,8 @@ import { Label } from "@/components/ui/label"
 export default function CreateQuestion({ subjId, createQuestionCallback, className="" }) {
   const [question, setQuestion] = useState({
     statement: "",
-    explanation: ""
+    explanation: "",
+    subject: subjId
   })
 
   const [answers, setAnswers] = useState<Answer[]>([])

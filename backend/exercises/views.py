@@ -12,7 +12,14 @@ import json
 # Create your views here.
 class QuestionListView(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
+    def get_queryset(self):
+        queryset = Question.objects.all()
+        subj_id = self.request.query_params.get('subject', None)
+
+        if subj_id:
+            queryset = queryset.filter(subject=subj_id)
+
+        return queryset
 
     def get_permissions(self):
         if self.request.method == "POST":
@@ -25,10 +32,6 @@ class QuestionRetrieveView(generics.RetrieveAPIView):
     queryset = Question.objects.all()
 
     def get_serializer_class(self):
-
-        if self.request.query_params.get('get_explanation', '0') != '1':
-            return QuestionSerializerNoExplanation
-
         return QuestionSerializer
 
 class TestListView(generics.ListCreateAPIView):
