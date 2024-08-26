@@ -2,6 +2,9 @@
 
 import { useState, FormEvent } from 'react';
 import { apiPost } from "@/utils/api";
+import { IoMdAttach } from 'react-icons/io';
+import Input from './Input';
+import Textarea from './Textarea';
 
 export default function NewPostForm({ is_private, community=null, subject=null }) {
   const [file, setFile] = useState(null);
@@ -36,11 +39,14 @@ export default function NewPostForm({ is_private, community=null, subject=null }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="file" onChange={handleFileChange} />
-      <input onChange={e => setForm({...form, title: e.target.value})}/>
-      <textarea onChange={e => setForm({...form, content: e.target.value})}/>
-      <button>Create Post</button>
+      <form onSubmit={handleSubmit} className="flex flex-col w-full">
+      <div className="w-full">
+        <Input onChange={e => setForm({...form, title: e.target.value})} placeholder="Título"/>
+      </div>
+      <Textarea onChange={e => setForm({...form, content: e.target.value})} placeholder="Conteúdo" className="w-[60%] mb-4 h-56"/>
+      <label  htmlFor="file-input"><IoMdAttach className="h-auto w-8 hover:cursor-pointer"/></label>
+      <input type="file" onChange={handleFileChange} className="hidden" id="file-input"/>
+      <button className="w-fit p-2 rounded-md bg-primary mt-4">Publicar</button>
     </form>
   )
 }

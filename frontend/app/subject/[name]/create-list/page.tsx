@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import CreateQuestion from '@/components/CreateQuestion'
 import Question from '@/interfaces/Question';
+import Input from '@/components/Input';
 
 export default function Page({ params }) {
   const { name } = params;
@@ -57,32 +58,38 @@ export default function Page({ params }) {
   }
 
   return (
-    <div>
-      <div>
-        <div>
-          <label>Título da prova:</label>
-          <input type="text" onChange={(e) => setNewTest({...newTest, title: e.target.value})}/>
+    <div className="w-full flex flex-col">
+      <div className="w-full">
+        <div className="w-full">
+          <Input type="text" placeholder="Título" onChange={(e) => setNewTest({...newTest, title: e.target.value})} className="mb-4 w-[60%]"/>
         </div>
-        <div>
-        </div>
-        <h2>Questões no teste:</h2>
-        {
-          newTest.questions.map(question => {
-            return (
-              <div key={question.id} className="flex flex-row">
-                <p>{question.statement}</p>
-                <button onClick={() => setTestQuestions(newTest.questions.filter(q => q.id !== question.id))}>Remover questão da lista</button>
+        <div className="w-[60%] border-2 border-white border-opacity-[20%] p-4 rounded-md mb-4">
+          <h2>Questões no teste:</h2>
+          {
+            newTest.questions.map(question => {
+              return (
+                <div key={question.id} className="flex flex-row">
+                  <p>{question.statement}</p>
+                  <button onClick={() => setNewTest({...newTest, questions: newTest.questions.filter(q => q.id !== question.id)})}>Remover questão da lista</button>
+                </div>
+              )
+            })
+          }
+          {
+            newTest.questions.length === 0 &&
+              <div className="mt-4">
+                <p>Nenhuma!</p>
+                <p>Adicione uma questão à sua lista abaixo</p>
               </div>
-            )
-          })
-        }
+          }
+        </div>
       </div>
 
       {
         newQuestion ?
           <CreateQuestion subjId={subjId} createQuestionCallback={handleCreateNewQuestion}/>
           :
-          <button onClick={() => setNewQuestion(true)}>Criar nova questão</button>
+          <button className="w-fit p-2 bg-secondary border-white border-2 border-opacity-[60%] rounded-md" onClick={() => setNewQuestion(true)}>Criar nova questão</button>
       }
 
 
@@ -97,7 +104,7 @@ export default function Page({ params }) {
         })
       }
 
-      <button onClick={handleCreateTest}>Criar Teste</button>
+      <button className="w-fit p-2 bg-primary rounded-md mt-4" onClick={handleCreateTest}>Criar Teste</button>
     </div>
   )
 }

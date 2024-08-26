@@ -80,6 +80,7 @@ class SubjectListView(generics.ListAPIView):
 class SubjectRetrieveView(generics.RetrieveAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+    permission_classes = [AllowAny]
 
 class VotesView(generics.ListCreateAPIView):
     queryset = Votes.objects.all()

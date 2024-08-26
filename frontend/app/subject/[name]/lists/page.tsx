@@ -44,16 +44,19 @@ export default  function Page({ params }) {
   }
 
   return (
-    <div>
-      <Link href={`/subject/${name}/create-list`}>Criar uma nova lista</Link>
+    <div className="h-full flex flex-col">
+      <h1 className="uppercase mt-4 mb-4 font-bold">Listas de Exercícios</h1>
+      <Link href={`/subject/${name}/create-list`} className="p-4 bg-primary rounded-xl my-6">Criar uma nova lista</Link>
       
-      {
-        tests.map(t => {
-          return (
-            <Link key={t.id} href={`/subject/${name}/test/${t.id}`}>{t.title}</Link>
-          )}
-        )
-      }
+      <ul>
+        {
+          tests.map(t => {
+            return (
+              <Link key={t.id} href={`/subject/${name}/test/${t.id}`}>{t.title}</Link>
+            )}
+          )
+        }
+      </ul>
     </div>
   )
 }
