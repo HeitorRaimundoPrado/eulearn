@@ -46,7 +46,7 @@ export default function Home() {
                   posts[idx] &&
                   posts[idx].results.map(post => {
                     return (
-                      <Link key={post.id} href={`/subject/${subject.id}/post/${post.id}`} className="mb-6 border-2 border-white rounded-md border-opacity-[20%] w-[80%] p-4">
+                      <Link key={post.id} href={`/subject/${subject.id}/forum/post/${post.id}`} className="mb-6 border-2 border-white rounded-md border-opacity-[20%] w-[80%] p-4">
                         <h3 className="font-bold mb-2 text-2xl">{post.title}</h3>
                         <p className="line-clamp-4 text-justify opacity-[60%]">{post.content}</p>
                       </Link>

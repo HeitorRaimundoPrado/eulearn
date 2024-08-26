@@ -51,6 +51,16 @@ export default function Page({ params }) {
   }
 
   const handleCreateTest = () => {
+    //TODO: validate the data in the backend too
+    if (newTest.title === '') {
+      alert("Você não pode criar uma questão sem título")
+      return;
+    }
+
+    else if (newTest.title.length < 15) {
+      alert("O título da questão deve ser descritivo para ajudar os usuários a pesquisarem pelo tema")
+      return;
+    }
     apiPost(`tests/`, {...newTest, questions: newTest.questions.map(q => q.id)})
     .then(data => {
       alert("Nova lista de exercícios criada com sucesso!")
@@ -68,9 +78,9 @@ export default function Page({ params }) {
           {
             newTest.questions.map(question => {
               return (
-                <div key={question.id} className="flex flex-row">
+                <div key={question.id} className="flex flex-row items-center my-2">
                   <p>{question.statement}</p>
-                  <button onClick={() => setNewTest({...newTest, questions: newTest.questions.filter(q => q.id !== question.id)})}>Remover questão da lista</button>
+                  <button className="bg-destructive p-2 border-2 border-white rounded-md ml-10 border-opacity-[20%]" onClick={() => setNewTest({...newTest, questions: newTest.questions.filter(q => q.id !== question.id)})}>Remover questão da lista</button>
                 </div>
               )
             })
@@ -93,16 +103,18 @@ export default function Page({ params }) {
       }
 
 
-      {
-        subjQuestions.map(question => {
-          return (
-            <div key={question.id} className="flex flex-row">
-              <p>{question.statement}</p>
-              <button onClick={() => handleAddQuestion(question)}>Adicionar questão à lista</button>
-            </div>
-          )
-        })
-      }
+      <div className="my-2">
+        {
+          subjQuestions.map(question => {
+            return (
+              <div key={question.id} className="flex flex-row items-center justify-between w-[24%]">
+                <p>{question.statement}</p>
+                <button className="bg-secondary rounded-md border-2 border-white p-2 border-opacity-[20%] my-2" onClick={() => handleAddQuestion(question)}>Adicionar questão à lista</button>
+              </div>
+            )
+          })
+        }
+      </div>
 
       <button className="w-fit p-2 bg-primary rounded-md mt-4" onClick={handleCreateTest}>Criar Teste</button>
     </div>
