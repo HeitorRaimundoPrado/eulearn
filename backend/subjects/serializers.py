@@ -19,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
 class PostDetailSerializer(serializers.ModelSerializer):
     net_votes = serializers.SerializerMethodField()
     attachments = PostAttachmentSerializer(many=True)
+    answers = serializers.PrimaryKeyRelatedField(many=True, queryset=ForumPost.objects.all(), required=False)
 
     class Meta:
         model = ForumPost
@@ -27,6 +28,9 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def get_net_votes(self, obj):
         cache_key = f'net_votes_{obj.id}'
         return cache.get(cache_key, 0)
+
+    def get_answers(self, obj):
+        return ForumPost.objects.filter(parent_post=obj).all()
 
 
 class SubjectSerializer(serializers.ModelSerializer):

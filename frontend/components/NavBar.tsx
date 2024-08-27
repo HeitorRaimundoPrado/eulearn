@@ -14,11 +14,10 @@ export default function NavBar() {
             </div>
 
             <div className="[&>*]:rounded-3xl [&>*]:py-[6px] [&>*]:px-7 flex flex-row gap-3">
-
                 <Link href="/login" className="text-sm border-[1px] border-white-20">
                     Sign In
                 </Link>
-                <Link href="/register" className="text-sm bg-primary-color">
+                <Link href="/register" className="text-sm bg-primary">
                     Sign Up
                 </Link>
 

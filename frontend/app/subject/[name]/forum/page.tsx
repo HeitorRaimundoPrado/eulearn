@@ -1,4 +1,3 @@
-import NewPostForm from '@/components/NewPostForm'
 import Link from 'next/link'
 import Post from '@/interfaces/Post'
 import UserLinkContext from '@/components/UserLinkContext'
@@ -22,8 +21,8 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className="w-full p-10 pt-4">
-      <NewPostForm is_private={false} subject={name}/>
-      <ul className="mt-4">
+      <Link href={`/subject/${name}/forum/create-post`} className="border-2 border-white-20 p-[12px] rounded-3xl">Criar nova publicação +</Link>
+      <ul className="mt-8">
         {
         latestPosts.map(post => { 
         return (
@@ -33,7 +32,7 @@ export default async function Page({ params }: PageProps) {
               <p className="h-5 text-ellipsis w-[60%] h-[5.4rem] leading-[1.4rem] whitespace-normal overflow-hidden line-clamp-4 text-justify" >{post.content}</p>
             </Link>
             <div className="mt-4 flex flex-row items-center">
-              <div className="w-6 h-6 rounded-3xl bg-white mr-4"/>
+              <div className="w-6 h-6 rounded-3xl bg-white-100 mr-4"/>
               <UserLinkContext username={post.author.username} id={post.author_id}/>
             </div>
           </li>

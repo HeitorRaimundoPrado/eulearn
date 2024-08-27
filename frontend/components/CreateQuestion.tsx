@@ -80,7 +80,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
       <RadioGroup className="my-2 px-4 p-2" onValueChange={handleChangeCorrect}>
         {
           answers.map((answer, idx) => (
-            <div className="flex flex-row mb-2 w-[4%] justify-between items-center" key={idx}>
+            <div className="flex flex-row mb-2 justify-between items-center" key={idx}>
               <RadioGroupItem id={`answer_${idx}`} name="isCorrect" value={idx} checked={answer.is_correct}/>
               <Label htmlFor={`answer_${idx}`} className="text-left grow ml-4">{answer.content}</Label>
             </div>

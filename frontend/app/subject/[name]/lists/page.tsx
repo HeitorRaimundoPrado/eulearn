@@ -52,7 +52,7 @@ export default  function Page({ params }) {
         {
           tests.map(t => {
             return (
-              <Link key={t.id} href={`/subject/${name}/test/${t.id}`}>{t.title}</Link>
+              <Link key={t.id} className="ease-in-out transition-all duration-200 text-white-80 hover:underline hover:text-primary ml-2" href={`/subject/${name}/test/${t.id}`}>{t.title}</Link>
             )}
           )
         }

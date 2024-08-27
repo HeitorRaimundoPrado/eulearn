@@ -8,7 +8,7 @@ import Subject from '@/interfaces/Subject'
 export default function Home() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [privateCommunities, setPrivateCommunities] = useState([]);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState({});
 
   useEffect(() => {
     apiGet("subjects")
@@ -16,7 +16,9 @@ export default function Home() {
       setSubjects(data)
       for (const subj of data) {
         apiGet(`posts/?subj=${subj.id}`)
-          .then(p => setPosts([...posts, p]))
+          .then(p => setPosts(old =>  {
+            return {...old,  [subj.id]: p.results  }
+          }))
       }
     })
     .catch(err => alert(err))
@@ -43,8 +45,8 @@ export default function Home() {
               <div className="flex flex-col">
                 <Link key={subject.id} href={`/subject/${subject.id}`} className="mb-4 opacity-[60%] hover:text-primary hover:opacity-[100%] hover:underline transition-all ease-in-out duration-200">{subject.name}</Link>
                 {
-                  posts[idx] &&
-                  posts[idx].results.map(post => {
+                  posts[subject.id] &&
+                  posts[subject.id].map(post => {
                     return (
                       <Link key={post.id} href={`/subject/${subject.id}/forum/post/${post.id}`} className="mb-6 border-2 border-white rounded-md border-opacity-[20%] w-[80%] p-4">
                         <h3 className="font-bold mb-2 text-2xl">{post.title}</h3>
