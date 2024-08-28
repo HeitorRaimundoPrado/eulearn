@@ -63,19 +63,19 @@ export default function Home() {
 
       <h2>Comunidades Não-Oficiais</h2>
       <div className="flex flex-col mt-4">
-        <Link href="create-community" className="bg-primary rounded-md p-4 w-fit">Criar comunidade</Link>
+        <Link href="create-community" className="bg-primary rounded-md p-4 w-fit mb-6">Criar comunidade</Link>
         <ul>
           {
             privateCommunities.map(community => {
               return (
               <div className="flex flex-row">
-                <Link key={community.id} href={`/community/${community.id}`}>
+                <Link key={community.id} href={`/community/${community.id}`} className="text-white-60 mr-4 hover:text-primary hover:opacity-[100%] hover:underline transition-all ease-in-out duration-200 mb-4">
                   {community.name}
                 </Link>
                 {
                   community.private &&
-                    <p>Protegida por senha</p> ||
-                    <p>Pública</p>
+                    <p className="text-amber-400">Protegida por senha</p> ||
+                    <p className="text-amber-400">Pública</p>
                 }
               </div>
             )
