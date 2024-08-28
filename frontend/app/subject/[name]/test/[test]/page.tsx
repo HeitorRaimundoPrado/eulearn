@@ -2,23 +2,31 @@
 
 import { useState, useEffect } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 
 function MapAnswers ({ question, selectAnswer }) {
   const [selectedAnsId, setSelectedAnsId] = useState(-1);
 
-  const handleChangeSelectedAns = (e, id) => {
+  const handleChangeSelectedAns = (id) => {
     selectAnswer(question.id, id)
     setSelectedAnsId(id)
   }
 
-  return question.answers.map((ans, idx) => {
+  return (
+    <RadioGroup onValueChange={(val) => handleChangeSelectedAns(val)}>
+      {
+        question.answers.map((ans, idx) => {
            return (
-             <div key={ans.id}>
-               <label>{String.fromCharCode('a'.charCodeAt(0)+idx)} {ans.content}</label>
-               <input name={`${question.id}`} type="radio" checked={selectedAnsId === ans.id} onChange={(e) => handleChangeSelectedAns(e, ans.id)}/>
+             <div key={ans.id} className="flex flex-row mb-2 items-center" >
+               <RadioGroupItem className="mr-4" name={`${question.id}`} value={ans.id} checked={selectedAnsId === ans.id}/>
+               <Label>{String.fromCharCode('a'.charCodeAt(0)+idx)}. {ans.content}</Label>
              </div>
            )
         })
+      }
+    </RadioGroup>
+  )
 }
 
 
@@ -26,8 +34,8 @@ function MapQuestions({ questions, selectAnswer }) {
   return questions.map((question, idx) => {
            return (
              <div key={question.id}>
-               <p>{idx+1}. {question.statement}</p>
-               <ul>
+               <p className="mt-4 mb-2 font-bold text-xl">{idx+1}. {question.statement}</p>
+               <ul className="ml-4">
                  <MapAnswers question={question} selectAnswer={selectAnswer} />
                </ul>
              </div>
@@ -36,27 +44,26 @@ function MapQuestions({ questions, selectAnswer }) {
 }
 
 function ExplanationsAndGrade({ explanations, questions }) {
-  console.log(explanations)
   return (
-    <div>
-    <p>Nota: {explanations.reduce((nota, q) => nota + (q.correct ? 1 : 0), 0)} / {explanations.length}</p>
+    <div className="ml-4">
+    <p className=" font-bold text-xl my-4">Nota: {explanations.reduce((nota, q) => nota + (q.correct ? 1 : 0), 0)} / {explanations.length}</p>
     {
       explanations.map((q, idx) => {
         return (
-        <div>
-          <p>Questão {idx}:</p>
+        <div key={q.id} className="ml-2">
+          <p className="my-2 font-bold">Questão {idx+1}:</p>
 
           {
             q.correct ?
-            <p>Você acertou!</p>
+            <p className="text-green-400">Você acertou!</p>
             :
             <>
-            <p>Você errou!</p>
-            <p>A alternativa correta era: {String.fromCharCode(questions[idx].answers.findIndex(a => a.id === q.correct_ans) + 'a'.charCodeAt(0))}</p>
+            <p className="text-red-400">Você errou!</p>
+            <p>A alternativa correta era: <span className="text-green-400">{String.fromCharCode(questions[idx].answers.findIndex(a => a.id === q.correct_ans) + 'a'.charCodeAt(0))}</span></p>
             </>
           }
 
-          <h2>Explicação: </h2>
+          <h2 className="font-bold">Explicação: (Questão {idx+1})</h2>
           <p>{q.explanation}</p>
         </div>
         )
@@ -110,10 +117,10 @@ export default function Page({ params }) {
   }
   
   return (
-    <div>
-      <h1>{testObj.title}</h1>
+    <div className="mb-10">
+        <h1 className="text-2xl font-bold">{testObj.title}</h1>
       <MapQuestions questions={testObj.questions} selectAnswer={selectAnswer} />
-      <button onClick={handleFinishTest} >Terminar teste</button>
+      <button onClick={handleFinishTest} className="bg-primary px-4 py-2 hover:opacity-[80%] transition-all rounded-md my-6 ease-in-out duration-200">Terminar teste</button>
       {
         finishedTest && 
         <ExplanationsAndGrade explanations={explanations} questions={testObj.questions}/>
