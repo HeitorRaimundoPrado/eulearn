@@ -1,15 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from communities.models import Community
-import uuid
-import string
+from bookmarks.models import Bookmarkable
 
 # Create your models here.
 class Subject(models.Model):
     description = models.TextField()
     name = models.CharField(max_length=50)
 
-class ForumPost(models.Model):
+class ForumPost(Bookmarkable):
     title = models.CharField(max_length=100, blank=True)
     private = models.BooleanField(default=False)
     is_social = models.BooleanField(default=False)

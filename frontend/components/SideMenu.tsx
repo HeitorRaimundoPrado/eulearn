@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { apiGet } from '@/utils/api';
 import Link from 'next/link';
+import useGlobalStore from '@/stores/globalStore';
 
 import { GoHome } from "react-icons/go";
 import { GoHomeFill } from "react-icons/go";
@@ -28,12 +29,17 @@ export default function Page() {
 	const [subjects, setSubjects] = useState<Subject[]>([])
 	const pathname = usePathname();
 
+        const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
+        const [hydrated, setHydrated] = useState<boolean>(false);
+
 	useEffect(() => {
 		apiGet("subjects")
 			.then(data => {
 				setSubjects(data)
 			})
 			.catch(err => alert(err))
+
+                setHydrated(true);
 	}, [])
 
 	return (
@@ -112,39 +118,44 @@ export default function Page() {
 			</div>
 
 			<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
-				<Link 
-					href="/settings" 
-					className={`h-11 w-12/12 rounded-lg pl-4
-					flex flex-row justify-left items-center gap-3
-					hover:text-white-100 duration-200 
-					${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
-				>
-					{
-						pathname == '/settings' ?
-						<IoSettingsSharp className="w-6 h-6" /> :
-						<IoSettingsOutline className="w-6 h-6" />
-					}
-					<p className='text-sm font-normal'>
-						Configurações
-					</p>
-				</Link>
+                                {
+                                        (hydrated && isLoggedIn) && 
+                                                  <>
+                                                            <Link 
+                                                                    href="/settings" 
+                                                                    className={`h-11 w-12/12 rounded-lg pl-4
+                                                                    flex flex-row justify-left items-center gap-3
+                                                                    hover:text-white-100 duration-200 
+                                                                    ${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+                                                            >
+                                                                    {
+                                                                            pathname == '/settings' ?
+                                                                            <IoSettingsSharp className="w-6 h-6" /> :
+                                                                            <IoSettingsOutline className="w-6 h-6" />
+                                                                    }
+                                                                    <p className='text-sm font-normal'>
+                                                                            Configurações
+                                                                    </p>
+                                                            </Link>
 
-				<Link 
-					href="/bookmarks" 
-					className={`h-12 w-12/12 rounded-lg pl-4
-					flex flex-row justify-left items-center gap-3
-					hover:text-white-100 duration-200 
-					${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
-				>
-					{
-						pathname == '/bookmarks' ? 
-						<BsBookmarkFill className="w-5 h-5" /> :
-						<BsBookmark className="w-5 h-5" />
-					}
-					<p className='text-sm font-normal'>
-						Salvos
-					</p>
-				</Link>
+                                                            <Link 
+                                                                    href="/bookmarks" 
+                                                                    className={`h-12 w-12/12 rounded-lg pl-4
+                                                                    flex flex-row justify-left items-center gap-3
+                                                                    hover:text-white-100 duration-200 
+                                                                    ${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+                                                            >
+                                                                    {
+                                                                            pathname == '/bookmarks' ? 
+                                                                            <BsBookmarkFill className="w-5 h-5" /> :
+                                                                            <BsBookmark className="w-5 h-5" />
+                                                                    }
+                                                                    <p className='text-sm font-normal'>
+                                                                            Salvos
+                                                                    </p>
+                                                            </Link>
+                                                    </>
+                                  }
 
 				<Link 
 					href="/about" 

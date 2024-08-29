@@ -12,9 +12,11 @@ class PostAttachmentSerializer(serializers.ModelSerializer):
         fields = ['file', 'uploaded_at', 'post']
 
 class PostSerializer(serializers.ModelSerializer):
+    author_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = ForumPost
-        fields = ['title', 'content', 'parent_post', 'private', 'community', 'id', 'subject']
+        fields = ['title', 'content', 'parent_post', 'private', 'community', 'id', 'subject', 'author_id']
 
 class PostDetailSerializer(serializers.ModelSerializer):
     net_votes = serializers.SerializerMethodField()
