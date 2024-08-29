@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { apiGet } from '@/utils/api';
+import { apiGet, apiPost } from '@/utils/api';
+import Input from '@/components/Input';
 import Link from 'next/link';
 
 function JoinCommunityForm ({ communityId, successCallback }) {
@@ -14,10 +15,10 @@ function JoinCommunityForm ({ communityId, successCallback }) {
   }
 
   return (
-    <form onSubmit={handleJoinCommunity}>
-      <p>Essa comunidade é protegida por senha e você não faz parte dela ainda</p>
-      <input type="password" onChange={e => setPassword(e.target.value)}/>
-      <button>Entrar na comunidade</button>
+    <form onSubmit={handleJoinCommunity} className="flex flex-col">
+      <p className="text-amber-foreground mb-4">Essa comunidade é protegida por senha e você não faz parte dela ainda</p>
+      <Input type="password" onChange={e => setPassword(e.target.value)} className="w-fit" placeholder="Senha da comunidade"/>
+      <button className="w-fit bg-primary px-4 py-2 mt-8 rounded-md hover:opacity-[80%] transition-all ease-in-out duration-200">Entrar na comunidade</button>
     </form>
   )
 }

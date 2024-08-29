@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.db.models.constraints import CheckConstraint
 from django.contrib.auth.models import User
 from subjects.models import Subject
+from communities.models import Community
 import uuid
 
 # Create your models here.
@@ -17,11 +18,13 @@ class Question(models.Model):
     tests = models.ManyToManyField(Test, blank=True, related_name="questions")
     statement = models.TextField(blank=True, null=True)
     statement_img_url = models.CharField(max_length=80, blank=True, null=True)
-    author = models.ForeignKey(User, related_name="questions", on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, related_name="questions_authored", on_delete=models.SET_NULL, null=True)
     route = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     explanation = models.TextField(blank=True, null=True)
+    community = models.ForeignKey(Community, blank=True, null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    subject = models.ForeignKey(Subject, related_name="questions", on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, related_name="questions", on_delete=models.CASCADE, null=True, blank=True)
+    answered_by = models.ManyToManyField(User, related_name="questions_answered")
 
     class Meta:
         constraints = [
@@ -60,3 +63,4 @@ class TestVotes(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     positive = models.BooleanField()
     user = models.ForeignKey(User, related_name="test_votes", on_delete=models.CASCADE)
+

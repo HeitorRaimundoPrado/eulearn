@@ -50,8 +50,12 @@ function ExplanationsAndGrade({ explanations, questions }) {
     {
       explanations.map((q, idx) => {
         return (
-        <div key={q.id} className="ml-2">
+        <div key={q.id} className=" border-b-2 border-white-20 mb-2 p-4">
           <p className="my-2 font-bold">Questão {idx+1}:</p>
+          {
+            q.already_answered &&
+              <p className="my-2 text-amber-400">Você já havia respondido essa questão (ela não provocará alterações no seu rating)</p>
+          }
 
           {
             q.correct ?
@@ -63,8 +67,10 @@ function ExplanationsAndGrade({ explanations, questions }) {
             </>
           }
 
-          <h2 className="font-bold">Explicação: (Questão {idx+1})</h2>
-          <p>{q.explanation}</p>
+          <div className="my-4">
+            <h2 className="font-bold">Explicação: (Questão {idx+1})</h2>
+            <p>{q.explanation}</p>
+          </div>
         </div>
         )
       })

@@ -82,7 +82,7 @@ class SubjectRetrieveView(generics.RetrieveAPIView):
     serializer_class = SubjectSerializer
     permission_classes = [AllowAny]
 
-class VotesView(generics.ListCreateAPIView):
+class VotesView(generics.CreateAPIView):
     queryset = Votes.objects.all()
 
     def get_serializer_class(self):
@@ -92,16 +92,14 @@ class VotesView(generics.ListCreateAPIView):
         return VotesDetailSerializer
 
     def get_permissions(self):
-        if self.request.method == "POST":
-            post_id = self.request.data.get('post')
-            post = ForumPost.objects.get(id=post_id)
+        post_id = self.request.data.get('post')
+        post = ForumPost.objects.get(id=post_id)
 
-            if post.community:
-                return [IsMemberOfCommunity()]
+        if post.community:
+            return [IsMemberOfCommunity()]
 
-            return [IsAuthenticated()]
+        return [IsAuthenticated()]
 
-        return [AllowAny()]
 
     
     def perform_create(self, serializer):
@@ -122,8 +120,6 @@ class VotesView(generics.ListCreateAPIView):
 
             else:
                 existing_vote.delete()
-
-        serializer.save(user=user)
 
         serializer.save(user=self.request.user)
 

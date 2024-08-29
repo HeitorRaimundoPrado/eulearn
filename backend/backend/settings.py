@@ -258,3 +258,5 @@ LOGGING = {
         },
     },
 }
+
+AUTH_USER_MODDEL = 'user.CustomUser'

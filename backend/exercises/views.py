@@ -1,12 +1,12 @@
 from django.db import models
-from django.db.models.functions import Coalesce
-from django.db.models import F, Count, Max, Func, Value, Q
 from django.http import JsonResponse
 from django.core.cache import cache
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Question, Answer, Test, QuestionVotes, TestVotes
-from .serializers import QuestionSerializer, AnswerSerializer, TestCreateSerializer, TestRetrieveSerializer, QuestionSerializerNoExplanation
+from .serializers import QuestionSerializer, AnswerSerializer, TestCreateSerializer, TestRetrieveSerializer, QuestionSerializerNoExplanation, QuestionVotesSerializer
+from .utils import calculate_pq, calculate_rd
+from communities.permissions import IsMemberOfCommunity
 import json
 
 # Create your views here.
@@ -33,6 +33,20 @@ class QuestionRetrieveView(generics.RetrieveAPIView):
 
     def get_serializer_class(self):
         return QuestionSerializer
+
+
+class QuestionVotesCreateView(generics.CreateAPIView):
+    queryset = QuestionVotes.objects.all()
+    serializer_class = QuestionVotesSerializer
+    def get_permissions(self):
+        question_id = self.request.data.get('question')
+        question = Question.objects.get(id=question_id)
+
+        if question.community:
+            return [IsMemberOfCommunity()]
+
+        return [IsAuthenticated()]
+
 
 class TestListView(generics.ListCreateAPIView):
     def get_queryset(self):
@@ -76,55 +90,24 @@ def check_test(request):
     body = json.loads(request.body)
     res_list = []
 
+    user_prof = request.user.profile
+
+
     for question_id, answer_id in body.items():
+        Pq = calculate_pq(question_id)
+        RD = calculate_rd(user_prof.rating, Pq)
+
         res_dict = dict()
+
         question = Question.objects.only('answers', 'explanation').get(pk=question_id)
-        
-        user_prof = request.user.profile
-
-        correct_answers = cache.get('correct_answers_{question_id}', 0)
-        incorrect_answers = cache.get('incorrect_answers_{question_id}', 0)
-
-        CIMax = cache.get("ci_max", 1)
-
-        CIq = incorrect_answers / max(correct_answers, 1)
-        if CIq > CIMax:
-            CIMax = CIq
-            cache.set('ci_max', CIq)
-
-        NVMax = QuestionVotes.objects.values('question').annotate(
-            positive_count=Count('id', filter=Q(positive=True)),
-            negative_count=Count('id', filter=Q(positive=False))
-        ).annotate(
-            ratio=Coalesce(F('positive_count'), Value(1)) / Coalesce(F('negative_count'), Value(1))
-        ).aggregate(Max('ratio'))['ratio__max'] or 1
-
-        votes_for_question = QuestionVotes.objects.filter(question=question)
-        positive_votes_q = votes_for_question.filter(positive=True).count()
-        negative_votes_q = votes_for_question.filter(positive=False).count()
-
-        NVq = positive_votes_q / max(negative_votes_q, 1)
-
-        import math
-        print(NVq)
-        print(NVMax)
-        print(CIq)
-        print(CIMax)
-
-        Pq = max(100 * math.sqrt(NVq) / math.sqrt(NVMax) * math.sqrt(CIq) / math.sqrt(CIMax), 10)
-
-        print(Pq)
-        PUmax = cache.get('pu_max', 1000)
-        Pu = user_prof.rating
-
-        from decimal import Decimal
-
-        RD = Decimal(Pq) * (Decimal(1) - Decimal(Pu) / Decimal(PUmax) * Decimal(0.95) + Decimal(1))
-
-        print(RD)
-
-        
         res_dict['explanation'] = question.explanation
+
+        if not cache.get(f'correct_answers_{question_id}'):
+            cache.set(f'correct_answers_{question_id}', 0, timeout=None)
+
+        if not cache.get(f'incorrect_answers_{question_id}'):
+            cache.set(f'incorrect_answers_{question_id}', 0, timeout=None)
+
         for a in question.answers.all():
             if a.is_correct:
                 if a.id == int(answer_id):
@@ -132,16 +115,32 @@ def check_test(request):
 
                 res_dict['correct_ans'] = a.id
 
+
         if not 'correct' in res_dict:
             res_dict['correct'] = False
-            user_prof.rating -= Decimal(0.8) * RD
+            if request.user.questions_answered.filter(id=question_id).exists():
+                res_dict['already_answered'] = True
+
+            else:
+                from decimal import Decimal
+                user_prof.rating -= Decimal(0.8) * RD
+                cache.incr(f'incorrect_answers_{question_id}', 1)
 
         else:
-            user_prof.rating += RD
+            if request.user.questions_answered.filter(id=question_id).exists():
+                res_dict['already_answered'] = True
+
+            else:
+                cache.incr(f'correct_answers_{question_id}', 1)
+                user_prof.rating += RD
+
 
         user_prof.save()
 
+        question.answered_by.add(request.user)
         ans = Answer.objects.only('content').get(pk=answer_id)
+        if not 'already_answered' in res_dict:
+            res_dict['already_answered'] = False
         res_dict['user_ans'] = ans.content
         res_dict['question'] = question_id
         res_list.append(res_dict)

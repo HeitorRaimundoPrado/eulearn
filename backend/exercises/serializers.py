@@ -13,6 +13,7 @@ class AnswerSerializer(serializers.ModelSerializer):
             representation.pop('is_correct', None)
         return representation
 
+
 class QuestionSerializerNoExplanation(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 
@@ -37,12 +38,20 @@ class QuestionSerializerNoExplanation(serializers.ModelSerializer):
 
         return representation
 
+
+class QuestionVotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionVotes
+        fields = '__all__'
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 
     class Meta:
         model = Question
         fields = "__all__"
+        read_only_fields = ('answered_by',)
 
     def to_representation(self, instance):
         if isinstance(instance, dict):
