@@ -137,7 +137,7 @@ export default function Page() {
 										return (
 											<Link key={subj.id} href={`/subject/${subj.id}`}>
 												<p className="text-sm font-normal">
-													# Name Here
+													# {subj.name}
 												</p>
 												<SlArrowDown className="w-3 h-3" />
 											</Link>
