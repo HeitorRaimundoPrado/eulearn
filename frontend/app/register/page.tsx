@@ -10,7 +10,17 @@ export default function Page() {
     password: ""
   })
 
+  const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
+
   const router = useRouter()
+
+  const handleAlertOpenChange = (open: boolean) => {
+    setShowModal(open)
+    if (open === false) {
+      router.push('/login');
+    }
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -22,13 +32,13 @@ export default function Page() {
       }
     })
       .then(res => {
-        if (res.ok) {
-          router.push("/login")
-        }
+        setShowModal(true);
       })
   }
+
   return (
     <div>
+      <Alert title="Registro bem sucedido!" message="Você será redirecionado para a página de login" open={showModal} onOpenChange={handleAlertOpenChange}/>
       <form className="flex flex-col" onSubmit={handleSubmit}>
         <input onChange={(e) => setForm({...form, username: e.target.value})}/>
         <input onChange={(e) => setForm({...form, email: e.target.value})}/>

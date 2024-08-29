@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiPost, apiGet } from '@/utils/api';
-import Answer from '@/interfaces/Answer';
+import CreateQuestion from '@/components/CreateQuestion';
 
 export default function Page({ params }) {
   const { name } = params;

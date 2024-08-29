@@ -20,12 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full dark">
+    <html lang="en" className="h-full dark flex flex-col">
       <body className={`${inter.className} bg-primary-gray text-white-100 flex flex-col h-full`} >
         <NavBar/>
         <div className="flex flex-row h-full w-full">
           <SideMenu/>
-          <div className="m-4 flex flex-row w-full h-full">
+          <div className="p-4 flex flex-row w-full h-full">
             {children}
           </div>
         </div>

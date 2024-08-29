@@ -16,7 +16,7 @@ class ForumPost(models.Model):
     subject = models.ForeignKey(Subject, related_name="posts", on_delete=models.CASCADE, null=True, blank=True)
     content = models.TextField()
     community = models.ForeignKey(Community, blank=True, null=True, related_name="posts", on_delete=models.CASCADE)
-    parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name="answers")
     author_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

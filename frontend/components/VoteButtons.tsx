@@ -10,7 +10,7 @@ enum VotingOptions {
  Upvote
 }
 
-export default function VoteButtons({ post, net_votes }) {
+export default function VoteButtons({ post, net_votes, className="" }) {
   const [votes, setVotes] = useState(net_votes);
   const [hasVoted, setHasVoted] = useState(null);
 
@@ -47,7 +47,7 @@ export default function VoteButtons({ post, net_votes }) {
   }
 
   return (
-    <div className="flex flex-row items-center bg-secondary w-fit p-2 px-4 rounded-md mt-6">
+    <div className={`flex flex-row items-center bg-secondary w-fit p-2 px-4 rounded-md ${className}`}>
       <div className="flex flex-col">
         <button className={`mr-4 mb-[2px] ${hasVoted === VotingOptions.Upvote ? "text-primary" : "" }`}onClick={handleUpvote}><IoArrowUpOutline/></button>
         <button className={`${hasVoted === VotingOptions.Downvote ? "text-primary" : "" }`}onClick={handleDownvote}><IoArrowDownOutline/></button>
