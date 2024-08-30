@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from django.db import models
 from communities.permissions import IsMemberOfCommunity
-from .models import ForumPost, Subject, Votes, PostAttachment
-from .serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer, PostAttachmentSerializer
+from subjects.models import ForumPost, Subject, PostAttachment
+from subjects.serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer, PostAttachmentSerializer
 from django.http import HttpResponse, Http404
 from django.conf import settings
 import boto3
@@ -81,48 +81,6 @@ class SubjectRetrieveView(generics.RetrieveAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     permission_classes = [AllowAny]
-
-class VotesView(generics.CreateAPIView):
-    queryset = Votes.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return VotesSerializer
-
-        return VotesDetailSerializer
-
-    def get_permissions(self):
-        post_id = self.request.data.get('post')
-        post = ForumPost.objects.get(id=post_id)
-
-        if post.community:
-            return [IsMemberOfCommunity()]
-
-        return [IsAuthenticated()]
-
-
-    
-    def perform_create(self, serializer):
-        user = self.request.user
-        post_id = self.request.data.get('post')
-        positive = self.request.data.get('positive')
-        
-        try:
-            post = ForumPost.objects.get(id=post_id)
-
-        except ForumPost.DoesNotExist:
-            raise NotFound('Post not found')
-
-        existing_vote = Votes.objects.filter(user=user, post=post).first()
-        if existing_vote:
-            if existing_vote.positive == positive:
-                raise ValidationError('You have already voted this way')
-
-            else:
-                existing_vote.delete()
-
-        serializer.save(user=self.request.user)
-
 
 
 def download_file(request, file_key):

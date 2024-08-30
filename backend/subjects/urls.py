@@ -1,5 +1,6 @@
 from django.urls import path, include
-from .views import PostListView, SubjectListView, VotesView, SubjectRetrieveView, PostRetrieveView, PostAttachmentUploadView, download_file
+from .views.main import PostListView, SubjectListView, SubjectRetrieveView, PostRetrieveView, PostAttachmentUploadView, download_file
+from .views.votes import VotesView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
