@@ -13,6 +13,7 @@ services:
     plan: free
     type: web
     env: python
+    rootDir: ./backend
     buildCommand: |
       pipenv install --dev
       python manage.py shell -c "
@@ -71,10 +72,12 @@ services:
 
       - key: DJANGO_SU_PASSWORD
         sync: false
+
   - name: eulearn-staging-frontend
-    env: static
+    env: node
     plan: free
     type: web
+    rootDir: ./frontend
     buildCommand: "npm install && npm run build"
     startCommand: "npm start"
     branch: preview
