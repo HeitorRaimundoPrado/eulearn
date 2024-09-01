@@ -10,7 +10,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-export default function Alert({ message, open, onOpenChange, title }) {
+interface AlertProps {
+  message: string,
+  open: boolean,
+  onOpenChange: (d: any) => any,
+  title: string
+}
+
+export default function Alert({ message, open, onOpenChange, title }: AlertProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>

@@ -14,7 +14,13 @@ async function getQuestions(id) {
   return data;
 }
 
-export default async function Page({ params }) {
+interface PageProps {
+  params: {
+    name: number,
+  }
+}
+
+export default async function Page({ params }: PageProps) {
   const { name } = params;
 
   const id = await getSubjId(name)

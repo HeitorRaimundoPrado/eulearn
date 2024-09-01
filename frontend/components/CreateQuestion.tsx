@@ -9,7 +9,13 @@ import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import { Label } from "@/components/ui/label"
 
-export default function CreateQuestion({ subjId, createQuestionCallback, className="" }) {
+interface CreateQuestionProps {
+  subjId: number,
+  createQuestionCallback: (d: any) => void,
+  className?: string
+}
+
+export default function CreateQuestion({ subjId, createQuestionCallback, className="" }: CreateQuestionProps) {
   const [question, setQuestion] = useState({
     statement: "",
     explanation: "",
@@ -35,12 +41,12 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     })
   }
 
-  const handleChangeCorrect = (idx: number) => {
+  const handleChangeCorrect = (idx: string) => {
     let answers_ = answers.map(a => {
       return {...a, is_correct: false }
     });
 
-    answers_[idx].is_correct = true;
+    answers_[parseInt(idx)].is_correct = true;
     setAnswers(answers_)
     console.log(answers_)
   }
@@ -81,7 +87,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
         {
           answers.map((answer, idx) => (
             <div className="flex flex-row mb-2 justify-between items-center" key={idx}>
-              <RadioGroupItem id={`answer_${idx}`} name="isCorrect" value={idx} checked={answer.is_correct}/>
+              <RadioGroupItem id={`answer_${idx}`} value={idx.toString()} checked={answer.is_correct}/>
               <Label htmlFor={`answer_${idx}`} className="text-left grow ml-4">{answer.content}</Label>
             </div>
           ))

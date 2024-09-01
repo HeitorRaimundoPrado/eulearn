@@ -1,14 +1,18 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import Input from '@/components/Input';
 import Link from 'next/link';
 
-function JoinCommunityForm ({ communityId, successCallback }) {
+interface JoinCommunityProps {
+  communityId: number,
+  successCallback: (data: any) => void
+}
+function JoinCommunityForm ({ communityId, successCallback }: JoinCommunityProps) {
   const [password, setPassword] = useState("");
 
-  const handleJoinCommunity = (e) => {
+  const handleJoinCommunity = (e: FormEvent) => {
     e.preventDefault();
     apiPost(`join-community/${communityId}`, { password })
     .then(data => successCallback(data))
@@ -23,7 +27,13 @@ function JoinCommunityForm ({ communityId, successCallback }) {
   )
 }
 
-export default function Page({ params }) {
+interface PageProps {
+  params: {
+    community_id: string
+  }
+}
+
+export default function Page({ params }: PageProps) {
   const { community_id } = params;
 
   const [community, setCommunity] = useState(null);

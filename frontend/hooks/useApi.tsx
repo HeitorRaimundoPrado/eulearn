@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { apiGet, apiPost } from '@/utils/api'
+import Post from '@/interfaces/Post'
+
 
 export default  function useApi() {
   const posts = {
@@ -8,7 +10,7 @@ export default  function useApi() {
     }
   }
 
-  return useMemo({
-    posts
-  })
+  return useMemo<any>(() => ({
+    posts: posts
+  }), [])
 }

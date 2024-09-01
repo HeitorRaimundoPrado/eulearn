@@ -5,7 +5,13 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { useState, useEffect } from 'react';
 import { apiGet, apiPost, apiDelete } from '@/utils/api';
 
-export default function Page({ objectId, contentType, className=""}) {
+interface BookmarkButtonProps {
+  objectId: number,
+  contentType: string,
+  className?: string
+}
+
+export default function BookmarkButton({ objectId, contentType, className=""}: BookmarkButtonProps) {
   const [alreadyBookmarked, setAlreadyBookmarked] = useState(false);
 
   useEffect(() => {
@@ -28,7 +34,7 @@ export default function Page({ objectId, contentType, className=""}) {
   const handleRemoveBookmark = () => {
     apiDelete(`bookmarks/delete/?${new URLSearchParams({
       content_type: contentType,
-      object_id: objectId
+      object_id: objectId.toString()
     })}`)
     .then(data => {
       setAlreadyBookmarked(false);

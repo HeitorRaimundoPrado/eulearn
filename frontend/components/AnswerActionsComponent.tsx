@@ -4,7 +4,12 @@ import VoteButtons from './VoteButtons';
 import { AnswerButton, AnswerForm } from './AddAnswerComponent'
 import { useState } from 'react';
 
-export default function AnswerActionsComponent({ net_votes, parent_post }) {
+interface AnswerActionsProps {
+  net_votes: number,
+  parent_post: number
+}
+
+export default function AnswerActionsComponent({ net_votes, parent_post }: AnswerActionsProps) {
   const [openForm, setOpenForm] = useState(false);
 
   return (

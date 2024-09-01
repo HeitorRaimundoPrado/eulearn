@@ -3,7 +3,12 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
-export default function UserLinkContext({ id, username }) {
+interface UserLinkContextProps {
+  id: number,
+  username: string
+}
+
+export default function UserLinkContext({ id, username }: UserLinkContextProps) {
   const [userContext, setUserContext] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null)
 

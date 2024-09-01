@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent, MouseEvent } from 'react';
 import Textarea from '@/components/Textarea';
 import { useRouter } from 'next/navigation'
 import { apiPost } from '@/utils/api';
 
-export function AnswerForm({ parent_post, closeForm, className="" }) {
+interface AnswerFormProps {
+  parent_post: number,
+  closeForm: () => void,
+  className?: string
+}
+
+export function AnswerForm({ parent_post, closeForm, className="" }: AnswerFormProps) {
   const [answer, setAnswer] = useState({
     content: "",
     parent_post: parent_post
@@ -13,7 +19,7 @@ export function AnswerForm({ parent_post, closeForm, className="" }) {
 
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     apiPost("posts/", answer)
     .then(data => {
@@ -31,11 +37,25 @@ export function AnswerForm({ parent_post, closeForm, className="" }) {
   )
 }
 
-export function AnswerButton({ onClick=() => {}, className=""}) {
+
+interface AnswerButtonProps {
+  onClick: (d: MouseEvent<HTMLButtonElement>) => void,
+  className?: string
+}
+
+export function AnswerButton({ onClick=(e) => {}, className=""}: AnswerButtonProps) {
   return <button onClick={onClick} className={`bg-background border-2 border-white-20 rounded-3xl px-[9px] py-[6px] text-sm w-40 ${className}`}>Responder</button>
 }
 
-export default function AddAnswerComponent({ parent_post, className="", buttonClass="" }) {
+
+interface AddAnswerComponent {
+  parent_post: number,
+  className?: string,
+  buttonClass: string,
+}
+
+
+export default function AddAnswerComponent({ parent_post, className="", buttonClass="" }: AddAnswerComponent) {
   const [contentOpen, setContentOpen] = useState(false)
 
   const handleAlternateContent = () => {

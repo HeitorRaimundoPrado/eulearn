@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { apiPost, apiGet } from '@/utils/api'
 import { IoArrowUpOutline, IoArrowDownOutline } from "react-icons/io5";
+import Post from '@/interfaces/Post';
 
 enum VotingOptions {
  Downvote = -1,
@@ -10,9 +11,15 @@ enum VotingOptions {
  Upvote
 }
 
-export default function VoteButtons({ post, net_votes, className="" }) {
-  const [votes, setVotes] = useState(net_votes);
-  const [hasVoted, setHasVoted] = useState(null);
+interface VoteButtonsProps {
+  post: number,
+  net_votes: number,
+  className: string
+}
+
+export default function VoteButtons({ post, net_votes, className="" }: VoteButtonsProps) {
+  const [votes, setVotes] = useState<number>(net_votes);
+  const [hasVoted, setHasVoted] = useState<VotingOptions | null>(null);
 
   useEffect(() => {
     apiGet(`user/vote/${post}`)
@@ -24,7 +31,7 @@ export default function VoteButtons({ post, net_votes, className="" }) {
     })
   }, [])
 
-  const handleUpvote = (e) => {
+  const handleUpvote = () => {
     apiPost("votes/", {
       post: post,
       positive: true
@@ -35,7 +42,7 @@ export default function VoteButtons({ post, net_votes, className="" }) {
     })
   }
 
-  const handleDownvote = (e) => {
+  const handleDownvote = () => {
     apiPost("votes/", {
       post: post,
       positive: false

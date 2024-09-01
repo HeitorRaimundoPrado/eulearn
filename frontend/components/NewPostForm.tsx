@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { apiPost } from "@/utils/api";
 import Input from './Input';
 import Textarea from './Textarea';
 import FileInput from './FileInput';
 
-export default function NewPostForm({ is_private, community=null, subject=null }) {
-  const [file, setFile] = useState(null);
+interface NewPostProps {
+  is_private: boolean,
+  community: number | null,
+  subject: number | null
+}
+
+export default function NewPostForm({ is_private, community=null, subject=null }: NewPostProps) {
+  const [file, setFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -34,8 +40,10 @@ export default function NewPostForm({ is_private, community=null, subject=null }
     })
   }
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0])
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0])
+    }
   }
 
   return (

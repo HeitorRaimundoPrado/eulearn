@@ -5,11 +5,17 @@ import { apiGet, apiPost } from '@/utils/api';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import BookmarkButton from "@/components/BookmarkButton";
+import Question from '@/interfaces/Question';
+
+interface MapAnswersProps {
+  question: Question,
+  selectAnswer: (d: number) => void
+}
 
 function MapAnswers ({ question, selectAnswer }) {
-  const [selectedAnsId, setSelectedAnsId] = useState(-1);
+  const [selectedAnsId, setSelectedAnsId] = useState<number>(-1);
 
-  const handleChangeSelectedAns = (id) => {
+  const handleChangeSelectedAns = (id: number) => {
     selectAnswer(question.id, id)
     setSelectedAnsId(id)
   }

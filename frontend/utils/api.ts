@@ -1,5 +1,9 @@
 import Cookie from 'js-cookie'
 
+interface RefreshTokenResponse {
+  access: string
+}
+
 async function refreshToken() {
   return new Promise<any>((resolve, reject) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/token/refresh`, {
@@ -15,11 +19,12 @@ async function refreshToken() {
     .then(res => {
       if (!res.ok) {
         reject(new Error("Unauthorized, try logging in again"));
-        throw new Error(res);
+        throw new Error("Some error happened");
       }
 
+      return res.json()
     })
-    .then(data => {
+    .then((data: RefreshTokenResponse) => {
       window.localStorage.setItem("access_token", data.access);
         resolve(data.access)
         return;
@@ -41,8 +46,10 @@ async function makeRequest(route: string, method: string, isRec: boolean = false
       headers: {
         "Authorization": string,
         "Content-Type"?: string
-      }
-      body?: string
+        "X-CSRFToken"?: string
+      },
+      body?: string,
+      credentials?: RequestCredentials,
     } = {
         method: method,
         headers: {
@@ -92,7 +99,7 @@ export async function apiGet(route: string) {
   return makeRequest(route, "GET");
 }
 
-export async function apiPost(route: string, body: any, isFormData: boolean) {
+export async function apiPost(route: string, body: any, isFormData: boolean = true) {
   return makeRequest(route, "POST",  false, body, isFormData)
 }
 
