@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
 from datetime import timedelta
+import os
+import dj_database_url
 
 load_dotenv()
 
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*e4i84#cjpojic1x5xi359f2rw1dqc1#d7$5-_d5!ckqq=p4w8'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,7 +71,6 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000'
 ]
 
 CORS_ALLOW_CREDENTIALS = True 
@@ -81,14 +81,19 @@ if IS_DEVELOPMENT:
         'http://localhost:3000'
     ]
 
-else:
-    CSRF_TRUSTED_ORIGINS = [
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000'
     ]
 
-print(CSRF_TRUSTED_ORIGINS)
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
-]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        os.environ.get("FRONTEND_URL")
+    ]
+
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get("FRONTEND_URL")
+    ]
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -130,16 +135,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-print(os.environ.get("DB_USER"))
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': os.environ.get("DB_NAME"),
-       'USER': os.environ.get("DB_USER"),
-       'PASSWORD': os.environ.get("DB_PASSWORD"),
-       'HOST': os.environ.get("DB_HOST"),
-       'PORT': os.environ.get("DB_PORT"),
-   }
+   'default': dj_database_url.config(
+       default='postgresql://postgres:dev@localhost:5432/mydb',
+   )
 }
 
 
@@ -194,7 +193,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": ["redis://127.0.0.1:6379/1"]
+            "hosts": [os.environ.get("REDIS_URL")]
         }
     }
 }
@@ -206,10 +205,10 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-            "access_key": 'minioadmin',
-            "secret_key": 'minioadmin',
-            "bucket_name": 'my-bucket',
-            "endpoint_url": 'http://localhost:9000',
+            "access_key": os.environ.get("S3_ACCESS_KEY"),
+            "secret_key": os.environ.get("S3_SECRET_KEY"),
+            "bucket_name": os.environ.get("S3_BUCKET_NAME"),
+            "endpoint_url": os.environ.get("S3_ENDPOINT"),
             "default_acl": None,
             "file_overwrite": False
         },
@@ -218,15 +217,16 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-            "access_key": 'minioadmin',
-            "secret_key": 'minioadmin',
-            "bucket_name": 'static',
-            "endpoint_url": 'http://localhost:9000',
+            "access_key": os.environ.get("S3_ACCESS_KEY"),
+            "secret_key": os.environ.get("S3_SECRET_KEY"),
+            "bucket_name": os.environ.get("S3_BUCKET_NAME_STATIC"),
+            "endpoint_url": os.environ.get("S3_ENDPOINT"),
             "default_acl": None,
             "file_overwrite": False
         }
     },
 }
+
 
 CACHES = {
     'default': {

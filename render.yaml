@@ -1,0 +1,66 @@
+databases:
+  - name: eulearn-staging-db
+    plan: free
+    ipAllowList: []
+
+services:
+  - name: eulearn-staging-redis
+    plan: free
+    type: redis
+    ipAllowList: []
+
+  - name: eulearn-staging-backend
+    plan: free
+    type: web
+    env: python
+    buildCommand: "pipenv install --dev"
+    startCommand: "pipenv run daphne backend.asgi:application"
+    branch: preview
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          name: eulearn-staging-redis
+          property: connectionString
+
+      - key: DJANGO_SETTINGS_MODULE
+        value: "backend.settings"
+
+      - key: FRONTEND_URL
+        sync: false
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eulearn-staging-db
+          property: connectionString
+
+      - key: SECRET_KEY
+        generateValue: true
+
+      - key: S3_ACCESS_KEY
+        sync: false
+
+      - key: S3_SECRET_KEY
+        sync: false
+
+      - key: S3_BUCKET_NAME
+        sync: false
+
+      - key: S3_BUCKET_NAME_STATIC
+        sync: false
+
+      - key: S3_ENDPOINT
+        sync: false
+
+  - name: eulearn-staging-frontend
+    env: static
+    plan: free
+    type: web
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    branch: preview
+    envVars:
+      - key: NEXT_PUBLIC_BACKEND_URI
+        sync: false
+
+
+

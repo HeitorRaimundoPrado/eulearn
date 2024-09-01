@@ -3,10 +3,9 @@ from django.http import JsonResponse, HttpResponse
 from django.core.cache import cache
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from exercises.models import Question, Answer, Test, QuestionVotes, TestVotes
-from exercises.serializers import QuestionSerializer, AnswerSerializer, TestCreateSerializer, TestRetrieveSerializer, QuestionSerializerNoExplanation, QuestionVotesSerializer
+from exercises.models import Question, Answer, Test
+from exercises.serializers import QuestionSerializer, AnswerSerializer, TestCreateSerializer, TestRetrieveSerializer, QuestionSerializerNoExplanation
 from exercises.utils import calculate_pq, calculate_rd
-from communities.permissions import IsMemberOfCommunity
 import json
 
 # Create your views here.
@@ -33,19 +32,6 @@ class QuestionRetrieveView(generics.RetrieveAPIView):
 
     def get_serializer_class(self):
         return QuestionSerializer
-
-
-class QuestionVotesCreateView(generics.CreateAPIView):
-    queryset = QuestionVotes.objects.all()
-    serializer_class = QuestionVotesSerializer
-    def get_permissions(self):
-        question_id = self.request.data.get('question')
-        question = Question.objects.get(id=question_id)
-
-        if question.community:
-            return [IsMemberOfCommunity()]
-
-        return [IsAuthenticated()]
 
 
 class TestListView(generics.ListCreateAPIView):

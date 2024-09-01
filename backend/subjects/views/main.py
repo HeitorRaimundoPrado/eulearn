@@ -2,13 +2,12 @@ from rest_framework import generics, viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from django.db import models
 from communities.permissions import IsMemberOfCommunity
 from subjects.models import ForumPost, Subject, PostAttachment
-from subjects.serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, VotesSerializer, VotesDetailSerializer, PostAttachmentSerializer
+from subjects.serializers import PostSerializer, SubjectSerializer, PostDetailSerializer, PostAttachmentSerializer
 from django.http import HttpResponse, Http404
 from django.conf import settings
 import boto3
