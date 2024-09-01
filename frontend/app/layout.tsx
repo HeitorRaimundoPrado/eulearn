@@ -3,9 +3,12 @@ import './globals.css'
 import { Metadata } from 'next';
 import NavBar from '@/components/NavBar'
 import SideMenu from '@/components/SideMenu'
+import HamburgerSideMenu from '@/components/HamburgerSideMenu'
+
+import { SidebarProvider } from '@/context/MenuContext'
 
 import { Inter } from 'next/font/google'
- 
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,13 +25,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full dark flex flex-col">
       <body className={`${inter.className} bg-primary-gray text-white-100 flex flex-col h-full`} >
-        <NavBar/>
-        <div className="flex flex-row h-full w-full">
-          <SideMenu/>
-          <div className="p-4 flex flex-row w-full h-full">
-            {children}
+        <SidebarProvider>
+          <NavBar />
+          <HamburgerSideMenu />
+          <div className="flex flex-row h-full w-full">
+            <SideMenu />
+            <div className="p-4 flex flex-row w-full h-full">
+              {children}
+            </div>
           </div>
-        </div>
+        </SidebarProvider>
       </body>
     </html>
   );
