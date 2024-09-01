@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { apiGet } from '@/utils/api';
@@ -40,7 +38,7 @@ export default function Page() {
 		apiGet("subjects")
 			.then(data => {
 				setSubjects(data)
-                                console.log('here')
+				console.log('here')
 			})
 			.catch(err => alert(err))
 
@@ -51,16 +49,6 @@ export default function Page() {
 		setOpen(open === index ? null : index);
 	};
 
-	let tabs = [
-		{
-			tab1: "Fórum Principal",
-			tab2: "Exercícios resolvidos",
-			tab3: "Lista de exercícios",
-			tab4: "Fórum informal"
-		}
-	]
-        
-        console.log(pathname)
 
 	return (
 		<div className="w-80 h-full hidden xl:block border-r-[1px] border-white-20 px-5 py-6">
@@ -142,7 +130,6 @@ export default function Page() {
 
 			<div className=" pb-0 border-b-[1px] border-white-20">
 				<h2 className="w-full opacity-[40%] px-4 py-2">DISCIPLINAS</h2>
-				<ul>
 					{/*{
 						subjects.map(subj => {
 							return (
@@ -155,85 +142,83 @@ export default function Page() {
 							)
 						})
 					}*/}
-					{tabs.map((tab, index) => (
-						<ul key={index}>
-							<li
-								className={`h-10 w-full rounded-lg px-4
+					<ul>
+						<ul>
+						<li
+							className={`h-10 w-full rounded-lg px-4
 								flex flex-row justify-between items-center
 								hover:text-white-100 duration-200 
-								${open === index ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
+								${open === 0 ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
 								duration-200 cursor-pointer`}
-								onClick={() => handleClick(index)}
-							>
-								{
-									subjects.map(subj => (
-											<Link key={subj.id} href={`/subject/${subj.id}`} className="flex flex-row items-center justify-between w-full">
-												<p className="text-sm font-normal">
-													# {subj.name}
-												</p>
-												{pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
-											</Link>
-									))
-								}
-							</li>
+							onClick={() => handleClick(0)}
+						>
+							{
+								subjects.map(subj => (
+									<Link key={subj.id} href={`/subject/${subj.id}`} className="flex flex-row items-center justify-between w-full">
+										<p className="text-sm font-normal">
+											# {subj.name}
+										</p>
+										{pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
+									</Link>
+								))
+							}
+						</li>
 
-							<div
-								style={{ display: open === index ? 'block' : 'none' }}
-								className="w-full py-3"
-							>
-								<div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
-									<Link href="/" >
-										<p className={`h-9 w-full rounded-r-lg pl-4
+						<div
+							style={{ display: open === 0 ? 'block' : 'none' }}
+							className="w-full py-3"
+						>
+							<div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
+								<Link href="/" >
+									<p className={`h-9 w-full rounded-r-lg pl-4
 										flex justify-left items-center 
 										text-sm font-normal duration-200
 										${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-											{tab.tab1}
-										</p>
-									</Link>
-									<Link href="/" >
-										<p className={`h-9 w-full rounded-r-lg pl-4
+										Fórum Principal
+									</p>
+								</Link>
+								<Link href="/" >
+									<p className={`h-9 w-full rounded-r-lg pl-4
 										flex justify-left items-center 
 										text-sm font-normal 
 										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-											{tab.tab2}
-										</p>
-									</Link>
-									<Link href="/" >
-										<p className={`h-9 w-full rounded-r-lg pl-4
+										Exercícios resolvidos
+									</p>
+								</Link>
+								<Link href="/" >
+									<p className={`h-9 w-full rounded-r-lg pl-4
 										flex justify-left items-center 
 										text-sm font-normal 
 										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-											{tab.tab3}
-										</p>
-									</Link>
-									<Link href="/" >
-										<p className={`h-9 w-full rounded-r-lg pl-4
+										Lista de exercícios
+									</p>
+								</Link>
+								<Link href="/" >
+									<p className={`h-9 w-full rounded-r-lg pl-4
 										flex justify-left items-center 
 										text-sm font-normal 
 										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-											{tab.tab4}
-										</p>
-									</Link>
-								</div>
-
+										Fórum informal
+									</p>
+								</Link>
 							</div>
-						</ul>
-					))}
 
+						</div>
+					</ul>
 				</ul>
 				<SlArrowDown className="h-6 w-6 pb-2 opacity-[20%] m-auto cursor-pointer" />
 			</div>
 
-			<div className="[&>*]:flex [&>a]:flex-row flex flex-col gap-3 pt-3">
+			<div className="flex flex-col gap-3 pt-3">
 				{
 					(hydrated && isLoggedIn) &&
-					<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
+					<div className="flex flex-col gap-3 pt-3">
 						<Link
 							href="/settings"
 							className={`h-10 w-12/12 rounded-lg pl-4
-					flex flex-row justify-left items-center gap-3
-					hover:text-white-100 duration-200 
-					${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+							flex flex-row justify-left items-center gap-3
+							hover:text-white-100 duration-200 
+							${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
 						>
 							{
 								pathname == '/settings' ?
@@ -248,9 +233,9 @@ export default function Page() {
 						<Link
 							href="/bookmarks"
 							className={`h-10 w-12/12 rounded-lg pl-4
-					flex flex-row justify-left items-center gap-3
-					hover:text-white-100 duration-200 
-					${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+							flex flex-row justify-left items-center gap-3
+							hover:text-white-100 duration-200 
+							${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
 						>
 							{
 								pathname == '/bookmarks' ?

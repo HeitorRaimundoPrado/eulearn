@@ -50,7 +50,7 @@ export default function Page() {
         <p>Não garantimos a permanência dos dados na versão final do app</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col text-black" className="flex flex-col w-[350px] [&>input]:mb-2 mt-24">
+      <form onSubmit={handleSubmit} className="flex flex-col w-[350px] [&>input]:mb-2 mt-24 text-black">
         <Input onChange={(e) => setForm({...form, username: e.target.value})} placeholder="Email"/>
         <Input type="password" onChange={(e) => setForm({...form, password: e.target.value})} placeholder="Senha"/>
         <button className="bg-primary rounded-3xl px-4 py-2 w-fit mx-auto mt-4">Login</button>

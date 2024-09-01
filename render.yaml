@@ -16,18 +16,19 @@ services:
     rootDir: ./backend
     buildCommand: |
       pipenv install --dev
-      python manage.py shell -c "
+      pipenv run python manage.py migrate
+      pipenv run python manage.py shell -c "
       from django.contrib.auth import get_user_model;
       User = get_user_model();
       username = '${DJANGO_SU_NAME}';
       email = '${DJANGO_SU_EMAIL}';
       password = '${DJANGO_SU_PASSWORD}';
       if not User.objects.filter(username=username).exists():
-      User.objects.create_superuser(username=username, email=email, password=password)
+        User.objects.create_superuser(username=username, email=email, password=password)
       "
     
     startCommand: "pipenv run daphne backend.asgi:application"
-    branch: preview
+    branch: staging
     envVars:
       - key: REDIS_URL
         fromService:
@@ -80,7 +81,7 @@ services:
     rootDir: ./frontend
     buildCommand: "npm install && npm run build"
     startCommand: "npm start"
-    branch: preview
+    branch: staging
     envVars:
       - key: NEXT_PUBLIC_BACKEND_URI
         sync: false
