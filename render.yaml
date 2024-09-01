@@ -27,7 +27,7 @@ services:
       "
     
     startCommand: "pipenv run daphne backend.asgi:application"
-    branch: preview
+    branch: staging
     envVars:
       - key: REDIS_URL
         fromService:
@@ -80,7 +80,7 @@ services:
     rootDir: ./frontend
     buildCommand: "npm install && npm run build"
     startCommand: "npm start"
-    branch: preview
+    branch: staging
     envVars:
       - key: NEXT_PUBLIC_BACKEND_URI
         sync: false
