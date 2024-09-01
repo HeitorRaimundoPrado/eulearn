@@ -13,7 +13,7 @@ class AnswerSerializer(serializers.ModelSerializer):
             representation.pop('is_correct', None)
         return representation
 
-
+# Retrieval only serializer
 class QuestionSerializerNoExplanation(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 
@@ -47,6 +47,7 @@ class QuestionVotesSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Question
@@ -105,11 +106,17 @@ class TestCreateSerializer(serializers.ModelSerializer):
         queryset=Question.objects.all(), 
         many=True
     )
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
 
     class Meta:
         model = Test
         fields = '__all__'
+
+class TestMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ['title', 'theme', 'community', 'subject', 'author']
 
 class QuestionVotesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,4 +128,5 @@ class TestVotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestVotes
         fields = '__all__'
+
 

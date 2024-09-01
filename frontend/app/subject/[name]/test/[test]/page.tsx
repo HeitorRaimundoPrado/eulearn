@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import BookmarkButton from "@/components/BookmarkButton";
 
 function MapAnswers ({ question, selectAnswer }) {
   const [selectedAnsId, setSelectedAnsId] = useState(-1);
@@ -118,7 +119,7 @@ export default function Page({ params }) {
 
   const handleFinishTest = () => {
     setFinishedTest(true);
-    apiPost(`check-test/`, userAnswers)
+    apiPost(`check-test/${test}`, userAnswers)
     .then(data => setExplanations(data.test_result));
   }
   
@@ -129,7 +130,11 @@ export default function Page({ params }) {
       <button onClick={handleFinishTest} className="bg-primary px-4 py-2 hover:opacity-[80%] transition-all rounded-md my-6 ease-in-out duration-200">Terminar teste</button>
       {
         finishedTest && 
-        <ExplanationsAndGrade explanations={explanations} questions={testObj.questions}/>
+          <ExplanationsAndGrade explanations={explanations} questions={testObj.questions}/>
+      }
+      {
+        finishedTest &&
+          <BookmarkButton className="ml-4 my-20 w-12 h-12" objectId={test} contentType="test"/>
       }
     </div>
   )

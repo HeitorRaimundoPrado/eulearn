@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Alert from '@/components/Alert'
 
 export default function Page() {
   const [form, setForm] = useState({
@@ -11,7 +12,6 @@ export default function Page() {
   })
 
   const [showModal, setShowModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
 
   const router = useRouter()
 

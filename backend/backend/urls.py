@@ -27,5 +27,6 @@ urlpatterns = [
     path('', include('exercises.urls')),
     path('', include('user.urls')),
     path('', include('chat_messages.urls')),
-    path('', include('communities.urls'))
+    path('', include('communities.urls')),
+    path('', include('bookmarks.urls'))
 ]

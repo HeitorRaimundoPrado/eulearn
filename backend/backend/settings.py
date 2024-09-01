@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'storages',
     'corsheaders',
     'register',
@@ -52,7 +53,8 @@ INSTALLED_APPS = [
     'exercises',
     'channels',
     'chat_messages',
-    'communities'
+    'communities',
+    'bookmarks'
 ]
 
 MIDDLEWARE = [

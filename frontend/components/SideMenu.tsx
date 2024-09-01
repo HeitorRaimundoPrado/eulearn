@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { apiGet } from '@/utils/api';
 import Link from 'next/link';
+import useGlobalStore from '@/stores/globalStore';
 
 import { GoHome } from "react-icons/go";
 import { GoHomeFill } from "react-icons/go";
@@ -11,6 +12,8 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { BsPlusCircle } from "react-icons/bs";
 import { BsPlusCircleFill } from "react-icons/bs";
+import { PiListPlusLight } from "react-icons/pi";
+import { PiListPlusFill } from "react-icons/pi";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import { BsBookmark } from "react-icons/bs";
@@ -30,12 +33,17 @@ export default function Page() {
 	const pathname = usePathname();
 	const [open, setOpen] = useState<null | number>(null);
 
+	const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
+	const [hydrated, setHydrated] = useState<boolean>(false);
+
 	useEffect(() => {
 		apiGet("subjects")
 			.then(data => {
 				setSubjects(data)
 			})
 			.catch(err => alert(err))
+
+		setHydrated(true);
 	}, [])
 
 	const handleClick = (index: number | null) => {
@@ -52,12 +60,12 @@ export default function Page() {
 	]
 
 	return (
-		<div className="w-64 h-full hidden xl:block border-r-[1px] border-white-20 px-3 py-3">
+		<div className="w-80 h-full hidden xl:block border-r-[1px] border-white-20 px-5 py-6">
 			<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 border-b-[1px] pb-3 border-white-20">
 
 				<Link
 					href="/"
-					className={`h-11 w-12/12 rounded-lg pl-4
+					className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
@@ -75,7 +83,7 @@ export default function Page() {
 
 				<Link
 					href="/chat-messages"
-					className={`h-11 w-12/12 rounded-lg pl-4
+					className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/chat-messages' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
@@ -91,7 +99,7 @@ export default function Page() {
 				</Link>
 				<Link
 					href="/create-community"
-					className={`h-11 w-12/12 rounded-lg pl-4
+					className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/create-community' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
@@ -105,6 +113,28 @@ export default function Page() {
 						Criar comunidade
 					</p>
 				</Link>
+				{
+					subjects.map((subject, idx) => (
+
+						<Link
+							key={subject.id}
+							href={`/subject/${subject.id}/create-list`}
+							className={`h-10 w-12/12 rounded-lg pl-4
+								flex flex-row justify-left items-center gap-3
+								hover:text-white-100 duration-200 
+								${pathname == '/create' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+						>
+							{
+								pathname == '/create' ?
+									<PiListPlusFill className="w-5 h-5" /> :
+									<PiListPlusLight className="w-5 h-5" />
+							}
+							<p className='text-sm font-normal'>
+								Criar lista de exercícios
+							</p>
+						</Link>
+					))
+				}
 			</div>
 
 			<div className=" pb-0 border-b-[1px] border-white-20">
@@ -125,7 +155,7 @@ export default function Page() {
 					{tabs.map((tab, index) => (
 						<ul key={index}>
 							<li
-								className={`h-11 w-full rounded-lg px-4
+								className={`h-10 w-full rounded-lg px-4
 								flex flex-row justify-between items-center
 								hover:text-white-100 duration-200 
 								${open === index ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
@@ -139,7 +169,7 @@ export default function Page() {
 												<p className="text-sm font-normal">
 													# {subj.name}
 												</p>
-												<SlArrowDown className="w-3 h-3" />
+												{pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
 											</Link>
 										)
 									})
@@ -163,7 +193,7 @@ export default function Page() {
 										<p className={`h-9 w-full rounded-r-lg pl-4
 										flex justify-left items-center 
 										text-sm font-normal 
-										${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
 											{tab.tab2}
 										</p>
 									</Link>
@@ -194,43 +224,48 @@ export default function Page() {
 			</div>
 
 			<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
-				<Link
-					href="/settings"
-					className={`h-11 w-12/12 rounded-lg pl-4
+				{
+					(hydrated && isLoggedIn) &&
+					<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
+						<Link
+							href="/settings"
+							className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
-				>
-					{
-						pathname == '/settings' ?
-							<IoSettingsSharp className="w-6 h-6" /> :
-							<IoSettingsOutline className="w-6 h-6" />
-					}
-					<p className='text-sm font-normal'>
-						Configurações
-					</p>
-				</Link>
+						>
+							{
+								pathname == '/settings' ?
+									<IoSettingsSharp className="w-6 h-6" /> :
+									<IoSettingsOutline className="w-6 h-6" />
+							}
+							<p className='text-sm font-normal'>
+								Configurações
+							</p>
+						</Link>
 
-				<Link
-					href="/bookmarks"
-					className={`h-12 w-12/12 rounded-lg pl-4
+						<Link
+							href="/bookmarks"
+							className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
-				>
-					{
-						pathname == '/bookmarks' ?
-							<BsBookmarkFill className="w-5 h-5" /> :
-							<BsBookmark className="w-5 h-5" />
-					}
-					<p className='text-sm font-normal'>
-						Salvos
-					</p>
-				</Link>
+						>
+							{
+								pathname == '/bookmarks' ?
+									<BsBookmarkFill className="w-5 h-5" /> :
+									<BsBookmark className="w-5 h-5" />
+							}
+							<p className='text-sm font-normal'>
+								Salvos
+							</p>
+						</Link>
+					</div>
+				}
 
 				<Link
 					href="/about"
-					className={`h-12 w-12/12 rounded-lg pl-4
+					className={`h-10 w-12/12 rounded-lg pl-4
 					flex flex-row justify-left items-center gap-3
 					hover:text-white-100 duration-200 
 					${pathname == '/about' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
