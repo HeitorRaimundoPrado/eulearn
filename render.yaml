@@ -23,7 +23,7 @@ services:
       email = '${DJANGO_SU_EMAIL}';
       password = '${DJANGO_SU_PASSWORD}';
       if not User.objects.filter(username=username).exists():
-      User.objects.create_superuser(username=username, email=email, password=password)
+        User.objects.create_superuser(username=username, email=email, password=password)
       "
     
     startCommand: "pipenv run daphne backend.asgi:application"
