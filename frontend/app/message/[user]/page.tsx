@@ -24,7 +24,7 @@ export default function Page({ params }) {
   useEffect(() => {
     apiGet(`user/${user}`)
     .then(data => setReceiverUsername(data.username))
-  }, [])
+  }, [user])
 
 
   return (

@@ -21,7 +21,7 @@ export default function Page({ params }) {
       setSubject(result[0].id);
       setLoading(false);
     })
-  }, [])
+  }, [name])
 
 
   if (loading || subject === null) {

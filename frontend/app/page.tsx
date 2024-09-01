@@ -42,7 +42,7 @@ export default function Home() {
         {
           subjects.map((subject, idx) => {
             return (
-              <div className="flex flex-col">
+              <div className="flex flex-col" key={idx}>
                 <Link key={subject.id} href={`/subject/${subject.id}`} className="mb-4 opacity-[60%] hover:text-primary hover:opacity-[100%] hover:underline transition-all ease-in-out duration-200">{subject.name}</Link>
                 {
                   posts[subject.id] &&
@@ -68,7 +68,7 @@ export default function Home() {
           {
             privateCommunities.map(community => {
               return (
-              <div className="flex flex-row">
+              <div className="flex flex-row" key={community.id}>
                 <Link key={community.id} href={`/community/${community.id}`} className="text-white-60 mr-4 hover:text-primary hover:opacity-[100%] hover:underline transition-all ease-in-out duration-200 mb-4">
                   {community.name}
                 </Link>

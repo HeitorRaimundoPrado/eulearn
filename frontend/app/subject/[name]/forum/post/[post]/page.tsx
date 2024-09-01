@@ -19,7 +19,7 @@ async function Answers({ answers }) {
 
   return answerProps.map(ans => {
     return (
-      <div className="ml-4 border-l-2 border-white-20  p-2 pb-0 w-full h-auto">
+      <div className="ml-4 border-l-2 border-white-20  p-2 pb-0 w-full h-auto" key={ans.id}>
         <div className="w-6 h-6 bg-white-100 rounded-3xl mb-4"/>
         <p className="ml-2 mb-2">{ans.content}</p>
 
@@ -43,8 +43,8 @@ async function Answers({ answers }) {
         <div className="flex flex-col mb-6 w-full">
           <p className="text-justify w-[70%]">{data.content}</p>
           {
-            data.attachments.map(att => {
-              return <img src={att.file} alt="Não foi possível carregar a imagem"/>
+            data.attachments.map((att, idx) => {
+              return <img src={att.file} alt="Não foi possível carregar a imagem" key={idx}/>
             })
           }
         </div>

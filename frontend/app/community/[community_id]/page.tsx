@@ -35,7 +35,7 @@ export default function Page({ params }) {
       setCommunity({...data, posts: data.posts ? data.posts : []})
       setLoading(false)
       });
-    }, [])
+    }, [community_id])
 
   const handleJoinCommunity = (data) => {
     console.log(data)

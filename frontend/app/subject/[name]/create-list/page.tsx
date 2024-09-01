@@ -22,9 +22,9 @@ export default function Page({ params }) {
     apiGet(`subject/${name}`)
     .then(data => {
       setSubjId(data.id)
-      setNewTest({...newTest, subject: data.id})
+      setNewTest(old => ({...old, subject: data.id}))
     });
-  }, [])
+  }, [name])
 
   
   useEffect(() => {

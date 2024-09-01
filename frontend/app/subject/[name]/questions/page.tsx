@@ -25,7 +25,7 @@ export default async function Page({ params }) {
     <div>
       <Link href={`/subject/${name}/create-question`}>Criar exercício</Link>
       {questions.map(question => (
-        <Link href={`/subject/${name}/questions/${question.route}`}>
+        <Link href={`/subject/${name}/questions/${question.id}`} key={question.id}>
           <h2>{question.statement}</h2>
         </Link>
       ))}
