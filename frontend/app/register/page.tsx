@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Input from '@/components/Input'
 import Alert from '@/components/Alert'
 
 export default function Page() {
@@ -37,13 +38,18 @@ export default function Page() {
   }
 
   return (
-    <div>
+    <div className="w-full h-full flex flex-col items-center">
       <Alert title="Registro bem sucedido!" message="Você será redirecionado para a página de login" open={showModal} onOpenChange={handleAlertOpenChange}/>
-      <form className="flex flex-col" onSubmit={handleSubmit}>
-        <input onChange={(e) => setForm({...form, username: e.target.value})}/>
-        <input onChange={(e) => setForm({...form, email: e.target.value})}/>
-        <input type="password" onChange={(e) => setForm({...form, password: e.target.value})}/>
-        <button>Register User</button>
+      <div className="my-20">
+        <h1 className="text-center font-bold text-xl">Essa é uma versão de teste do aplicativo!</h1>
+        <p>Não garantimos a permanência dos dados na versão final do app</p>
+      </div>
+      
+      <form onSubmit={handleSubmit} className="flex flex-col w-[350px] [&>input]:mb-2 mt-24">
+        <Input onChange={(e) => setForm({...form, username: e.target.value})} placeholder="Nome de usuário"/>
+        <Input onChange={(e) => setForm({...form, email: e.target.value})} placeholder="Email"/>
+        <Input type="password" onChange={(e) => setForm({...form, password: e.target.value})} placeholder="Senha"/>
+        <button className="bg-primary rounded-3xl px-4 py-2 w-fit mx-auto mt-4">Registrar usuário</button>
       </form>
     </div>
   )

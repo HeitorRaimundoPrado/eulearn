@@ -40,6 +40,7 @@ export default function Page() {
 		apiGet("subjects")
 			.then(data => {
 				setSubjects(data)
+                                console.log('here')
 			})
 			.catch(err => alert(err))
 
@@ -58,6 +59,8 @@ export default function Page() {
 			tab4: "Fórum informal"
 		}
 	]
+        
+        console.log(pathname)
 
 	return (
 		<div className="w-80 h-full hidden xl:block border-r-[1px] border-white-20 px-5 py-6">
@@ -163,16 +166,14 @@ export default function Page() {
 								onClick={() => handleClick(index)}
 							>
 								{
-									subjects.map(subj => {
-										return (
-											<Link key={subj.id} href={`/subject/${subj.id}`}>
+									subjects.map(subj => (
+											<Link key={subj.id} href={`/subject/${subj.id}`} className="flex flex-row items-center justify-between w-full">
 												<p className="text-sm font-normal">
 													# {subj.name}
 												</p>
 												{pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
 											</Link>
-										)
-									})
+									))
 								}
 							</li>
 
@@ -223,7 +224,7 @@ export default function Page() {
 				<SlArrowDown className="h-6 w-6 pb-2 opacity-[20%] m-auto cursor-pointer" />
 			</div>
 
-			<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
+			<div className="[&>*]:flex [&>a]:flex-row flex flex-col gap-3 pt-3">
 				{
 					(hydrated && isLoggedIn) &&
 					<div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">

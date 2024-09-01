@@ -3,6 +3,7 @@
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Alert from '@/components/Alert';
+import Input from '@/components/Input';
 import useGlobalStore from '@/stores/globalStore';
 
 export default function Page() {
@@ -41,12 +42,18 @@ export default function Page() {
   }
 
   return (
-    <div>
+    <div className="w-full h-full flex flex-col items-center">
       <Alert title="Login bem sucedido!" message="Você será redirecionado para a home" open={showModal} onOpenChange={handleAlertOpenChange}/>
-      <form onSubmit={handleSubmit} className="flex flex-col text-black">
-        <input onChange={(e) => setForm({...form, username: e.target.value})}/>
-        <input type="password" onChange={(e) => setForm({...form, password: e.target.value})}/>
-        <button>Login</button>
+
+      <div className="my-20">
+        <h1 className="text-center font-bold text-xl">Essa é uma versão de teste do aplicativo!</h1>
+        <p>Não garantimos a permanência dos dados na versão final do app</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col text-black" className="flex flex-col w-[350px] [&>input]:mb-2 mt-24">
+        <Input onChange={(e) => setForm({...form, username: e.target.value})} placeholder="Email"/>
+        <Input type="password" onChange={(e) => setForm({...form, password: e.target.value})} placeholder="Senha"/>
+        <button className="bg-primary rounded-3xl px-4 py-2 w-fit mx-auto mt-4">Login</button>
       </form>
     </div>
   )

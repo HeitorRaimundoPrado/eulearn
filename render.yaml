@@ -13,13 +13,25 @@ services:
     plan: free
     type: web
     env: python
-    buildCommand: "pipenv install --dev"
+    buildCommand: |
+      pipenv install --dev
+      python manage.py shell -c "
+      from django.contrib.auth import get_user_model;
+      User = get_user_model();
+      username = '${DJANGO_SU_NAME}';
+      email = '${DJANGO_SU_EMAIL}';
+      password = '${DJANGO_SU_PASSWORD}';
+      if not User.objects.filter(username=username).exists():
+      User.objects.create_superuser(username=username, email=email, password=password)
+      "
+    
     startCommand: "pipenv run daphne backend.asgi:application"
     branch: preview
     envVars:
       - key: REDIS_URL
         fromService:
           name: eulearn-staging-redis
+          type: redis
           property: connectionString
 
       - key: DJANGO_SETTINGS_MODULE
@@ -51,6 +63,14 @@ services:
       - key: S3_ENDPOINT
         sync: false
 
+      - key: DJANGO_SU_NAME
+        sync: false
+
+      - key: DJANGO_SU_EMAIL
+        sync: false
+
+      - key: DJANGO_SU_PASSWORD
+        sync: false
   - name: eulearn-staging-frontend
     env: static
     plan: free
