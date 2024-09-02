@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
-import { apiGet, apiPost } from '@/utils/api'
+import { apiGet } from '@/utils/api';
 
-export default  function useApi() {
+export default function useApi() {
   const posts = {
     all: async () => {
-      return apiGet('posts/')
+      return apiGet('posts/');
     }
-  }
+  };
 
-  return useMemo({
-    posts
-  })
+  return useMemo(() => ({ posts }), []);
 }

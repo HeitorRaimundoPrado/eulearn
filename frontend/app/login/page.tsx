@@ -51,8 +51,8 @@ export default function Page() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col w-[350px] [&>input]:mb-2 mt-24 text-black">
-        <Input onChange={(e) => setForm({...form, username: e.target.value})} placeholder="Email"/>
-        <Input type="password" onChange={(e) => setForm({...form, password: e.target.value})} placeholder="Senha"/>
+        <Input onChange={(e) => setForm({...form, username: e.target.value})} className="block" placeholder="Email"/>
+        <Input type="password" className="block" onChange={(e) => setForm({...form, password: e.target.value})} placeholder="Senha"/>
         <button className="bg-primary rounded-3xl px-4 py-2 w-fit mx-auto mt-4">Login</button>
       </form>
     </div>

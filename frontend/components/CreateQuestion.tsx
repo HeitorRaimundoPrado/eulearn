@@ -9,7 +9,15 @@ import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import { Label } from "@/components/ui/label"
 
-export default function CreateQuestion({ subjId, createQuestionCallback, className="" }) {
+import { ChangeEvent } from 'react'
+
+type CreateQuestionProps = {
+  subjId: string;
+  createQuestionCallback: (data: any) => void;
+  className?: string;
+}
+
+export default function CreateQuestion({ subjId, createQuestionCallback, className="" }: CreateQuestionProps) {
   const [question, setQuestion] = useState({
     statement: "",
     explanation: "",
@@ -35,15 +43,16 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     })
   }
 
-  const handleChangeCorrect = (idx: number) => {
-    let answers_ = answers.map(a => {
-      return {...a, is_correct: false }
-    });
+  const handleChangeCorrect = (value: string) => {
+    const idx = parseInt(value, 10);
+    const updatedAnswers = answers.map((a, i) => ({
+      ...a,
+      is_correct: i === idx
+    }));
 
-    answers_[idx].is_correct = true;
-    setAnswers(answers_)
-    console.log(answers_)
-  }
+    setAnswers(updatedAnswers);
+    console.log(updatedAnswers);
+  };
 
   const createQuestion = () => {
     let is_valid = 0;
@@ -61,7 +70,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
      ...question,
      answers: answers,
      subject: subjId
-   })
+    }, false)
     .then(data => {
       createQuestionCallback(data)
     })
@@ -70,18 +79,18 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
   return (
     <div className={`${className} [&>*]:w-full`}>
       <div className="mb-4">
-        <Input placeholder={"Enunciado"} onChange={e => setQuestion({...question, statement: e.target.value})} className="w-[60%]"/>
+        <Input placeholder={"Enunciado"} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuestion({...question, statement: e.target.value})} className="w-[60%]"/>
       </div>
 
       <div className="mb-4">
-        <Textarea onChange={e => setQuestion({...question, explanation: e.target.value})} placeholder={"Explicação"} className="h-56 w-[60%]"/>
+        <Textarea onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuestion({...question, explanation: e.target.value})} placeholder={"Explicação"} className="h-56 w-[60%]"/>
       </div>
 
       <RadioGroup className="my-2 px-4 p-2" onValueChange={handleChangeCorrect}>
         {
           answers.map((answer, idx) => (
             <div className="flex flex-row mb-2 justify-between items-center" key={idx}>
-              <RadioGroupItem id={`answer_${idx}`} name="isCorrect" value={idx} checked={answer.is_correct}/>
+              <RadioGroupItem id={`answer_${idx}`} value={idx.toString()} checked={answer.is_correct}/> {/*name="isCorrect" is not supported*/}
               <Label htmlFor={`answer_${idx}`} className="text-left grow ml-4">{answer.content}</Label>
             </div>
           ))
@@ -90,7 +99,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
       </RadioGroup>
             
       <div className="flex flex-row justify-between !w-[60%]">
-        <Input onChange={(e) => setNewAnswer(ans => {
+        <Input onChange={(e: any) => setNewAnswer(ans => {
             return {...ans, content: e.target.value}
           })} className="w-[60%]" placeholder="Nova Resposta"
           />
