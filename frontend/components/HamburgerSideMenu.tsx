@@ -145,7 +145,7 @@ export default function HamburgerSideMenu() {
                     <h2 className="w-full opacity-[40%] px-4 py-2">DISCIPLINAS</h2>
                     <ul>
                         <li>
-                            <li
+                            <p
                                 className={`h-10 w-full rounded-lg px-4
                                 flex flex-row justify-between items-center
                                 hover:text-white-100 duration-200 
@@ -165,7 +165,7 @@ export default function HamburgerSideMenu() {
                                         )
                                     })
                                 }
-                            </li>
+                            </p>
 
                             <div
                                 style={{ display: open === 0 ? 'block' : 'none' }}

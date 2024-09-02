@@ -1,13 +1,24 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { apiPost } from "@/utils/api";
 import Input from './Input';
 import Textarea from './Textarea';
 import FileInput from './FileInput';
 
-export default function NewPostForm({ is_private, community=null, subject=null }) {
-  const [file, setFile] = useState(null);
+type NewPostFormProps = {
+  is_private: string
+  community: null
+  subject: null
+}
+interface NewPostProps {
+  is_private: boolean,
+  community: number | null,
+  subject: number | null
+}
+
+export default function NewPostForm({ is_private, community=null, subject=null }: NewPostProps) {
+  const [file, setFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -19,7 +30,7 @@ export default function NewPostForm({ is_private, community=null, subject=null }
   
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    apiPost("posts/", form)
+    apiPost("posts/", form, false)
     .then(data => {
       if (file !== null) {
         const formData = new FormData();
@@ -34,8 +45,10 @@ export default function NewPostForm({ is_private, community=null, subject=null }
     })
   }
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0])
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0])
+    }
   }
 
   return (
@@ -43,7 +56,7 @@ export default function NewPostForm({ is_private, community=null, subject=null }
       <div className="w-full">
         <Input onChange={e => setForm({...form, title: e.target.value})} placeholder="Título" className="w-[60%] mb-4"/>
       </div>
-      <Textarea onChange={e => setForm({...form, content: e.target.value})} placeholder="Conteúdo" className="w-[60%] mb-4 h-56"/>
+      <Textarea onChange={(e: any) => setForm({...form, content: e.target.value})} placeholder="Conteúdo" className="w-[60%] mb-4 h-56"/>
       <FileInput onChange={handleFileChange}/>
       <button className="w-fit p-2 rounded-md bg-primary mt-4">Publicar</button>
     </form>

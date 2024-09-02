@@ -5,7 +5,13 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { useState, useEffect } from 'react';
 import { apiGet, apiPost, apiDelete } from '@/utils/api';
 
-export default function Page({ objectId, contentType, className=""}) {
+type PageProps = {
+  objectId: string; 
+  contentType: string;
+  className?: string;
+};
+
+export default function Page({ objectId, contentType, className = "" }: PageProps) {
   const [alreadyBookmarked, setAlreadyBookmarked] = useState(false);
 
   useEffect(() => {
@@ -19,7 +25,7 @@ export default function Page({ objectId, contentType, className=""}) {
     apiPost('bookmarks/', {
       content_type: contentType,
       object_id: objectId
-    })
+    }, false)
     .then(data => {
       setAlreadyBookmarked(true);
     })

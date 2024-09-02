@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { apiGet } from '@/utils/api';
@@ -130,7 +132,7 @@ export default function Page() {
 
 			<div className=" pb-0 border-b-[1px] border-white-20">
 				<h2 className="w-full opacity-[40%] px-4 py-2">DISCIPLINAS</h2>
-					{/*{
+				{/*{
 						subjects.map(subj => {
 							return (
 								<Link key={subj.id} href={`/subject/${subj.id}`} className="opacity-[80%] flex flex-row justify-between my-4 items-center">
@@ -142,8 +144,8 @@ export default function Page() {
 							)
 						})
 					}*/}
+				<ul>
 					<ul>
-						<ul>
 						<li
 							className={`h-10 w-full rounded-lg px-4
 								flex flex-row justify-between items-center
