@@ -13,8 +13,8 @@ type NewPostFormProps = {
 }
 interface NewPostProps {
   is_private: boolean,
-  community: number | null,
-  subject: number | null
+  community?: number | null,
+  subject: string | null
 }
 
 export default function NewPostForm({ is_private, community=null, subject=null }: NewPostProps) {

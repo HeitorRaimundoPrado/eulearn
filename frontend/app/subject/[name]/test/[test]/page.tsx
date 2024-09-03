@@ -53,7 +53,7 @@ function MapAnswers({ question, selectAnswer }: MapAnswersProps) {
           <RadioGroupItem
             className="mr-4"
             name={`${question.id}`}
-            value={ans.id}
+            value={ans.id.toString()}
             checked={selectedAnsId === ans.id}
           />
           <Label>{String.fromCharCode('a'.charCodeAt(0) + idx)}. {ans.content}</Label>

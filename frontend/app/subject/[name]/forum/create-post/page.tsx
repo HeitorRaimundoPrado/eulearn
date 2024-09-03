@@ -1,6 +1,10 @@
 import NewPostForm from '@/components/NewPostForm'
 
-export default function Page({ params }) {
+interface PageParams {
+  name: string;
+}
+
+export default function Page({ params }: { params: PageParams }) {
   const { name } = params;
 
   return (
