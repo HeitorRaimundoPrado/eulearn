@@ -1,14 +1,26 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import Input from '@/components/Input';
 import Link from 'next/link';
 
-function JoinCommunityForm ({ communityId, successCallback }) {
+interface JoinCommunityProps {
+  communityId: number,
+  successCallback: (data: any) => void
+}
+
+interface CommunityData {
+  name: string;
+  description: string;
+  current_user_is_member: boolean;
+  posts: Array<{ id: number; title: string }>;
+}
+
+function JoinCommunityForm ({ communityId, successCallback }: JoinCommunityProps) {
   const [password, setPassword] = useState("");
 
-  const handleJoinCommunity = (e) => {
+  const handleJoinCommunity = (e: FormEvent) => {
     e.preventDefault();
     apiPost(`join-community/${communityId}`, { password })
     .then(data => successCallback(data))
@@ -23,10 +35,16 @@ function JoinCommunityForm ({ communityId, successCallback }) {
   )
 }
 
-export default function Page({ params }) {
+interface PageProps {
+  params: {
+    community_id: string
+  }
+}
+
+export default function Page({ params }: PageProps) {
   const { community_id } = params;
 
-  const [community, setCommunity] = useState(null);
+  const [community, setCommunity] = useState<CommunityData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,19 +53,21 @@ export default function Page({ params }) {
       setCommunity({...data, posts: data.posts ? data.posts : []})
       setLoading(false)
       });
-    }, [])
+    }, [community_id])
 
-  const handleJoinCommunity = (data) => {
-    console.log(data)
-    setCommunity(data);
-    alert("Você entrou na comunidade!")
-  }
+    const handleJoinCommunity = (data: CommunityData) => {
+      console.log(data);
+      setCommunity(data);
+      alert("Você entrou na comunidade!");
+    };
 
   if (loading || community === null) {
     return (
       <div>carregando...</div>
     )
   }
+
+  const communityId = parseInt(community_id, 10);
   
   return (
     <div>
@@ -55,7 +75,7 @@ export default function Page({ params }) {
       <p className="text-white-60 mb-10">{community.description}</p>
       {
         !community.current_user_is_member &&
-          <JoinCommunityForm communityId={community_id} successCallback={handleJoinCommunity}/>
+          <JoinCommunityForm communityId={communityId} successCallback={handleJoinCommunity}/>
       }
 
       {

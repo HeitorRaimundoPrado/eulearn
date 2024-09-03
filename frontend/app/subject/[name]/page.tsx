@@ -2,16 +2,22 @@ import Link from 'next/link';
 
 type PageProps = {
   params: {
-    name: string
-  }
-}
+    name: string;
+  };
+};
+
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+};
 
 export default async function Page({ params }: PageProps) {
   const { name } = params;
 
   const subj = await (await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/subject/${name}`)).json();
 
-  const posts = (await (await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts/?subj=${name}`)).json()).results;
+  const posts: Post[] = (await (await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts/?subj=${name}`)).json()).results;
 
   console.log(posts)
 
@@ -24,7 +30,7 @@ export default async function Page({ params }: PageProps) {
           {
             posts.map(post => {
               return (
-                <div>
+                <div key={post.id}>
                   <h3>{post.title}</h3>
                   <p>{post.content}</p>
                 </div>

@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react';
 import { apiPost, apiGet } from '@/utils/api';
 import CreateQuestion from '@/components/CreateQuestion';
 
-export default function Page({ params }) {
+interface PageProps {
+  params: {
+    name: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
   const { name } = params;
 
   const [subject, setSubject] = useState(null);
@@ -21,7 +27,7 @@ export default function Page({ params }) {
       setSubject(result[0].id);
       setLoading(false);
     })
-  }, [])
+  }, [name])
 
 
   if (loading || subject === null) {
@@ -32,7 +38,7 @@ export default function Page({ params }) {
 
   return (
     <div>
-      <CreateQuestion subjId={subject} callbackCreateQuestion={() => alert("Questão criada com sucesso")}/>
+      <CreateQuestion subjId={subject} createQuestionCallback={() => alert("Questão criada com sucesso")} />
     </div>
   )
 }
