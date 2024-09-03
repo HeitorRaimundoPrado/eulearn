@@ -89,12 +89,12 @@ if IS_DEVELOPMENT:
 
 else:
     CSRF_TRUSTED_ORIGINS = [
-        os.environ.get("FRONTEND_URL")
+        os.environ.get("FRONTEND_URL"),
         "https://" + os.environ.get("DEPLOY_URL")
     ]
 
     CORS_ALLOWED_ORIGINS = [
-        os.environ.get("FRONTEND_URL")
+        os.environ.get("FRONTEND_URL"),
         "https://" + os.environ.get("DEPLOY_URL")
     ]
 
