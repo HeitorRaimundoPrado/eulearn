@@ -12,9 +12,9 @@ enum VotingOptions {
 }
 
 interface VoteButtonsProps {
-  post: number,
-  net_votes: number,
-  className: string
+  post: number;
+  net_votes: number;
+  className: string;
 }
 
 export default function VoteButtons({ post, net_votes, className="" }: VoteButtonsProps) {
@@ -35,7 +35,7 @@ export default function VoteButtons({ post, net_votes, className="" }: VoteButto
     apiPost("votes/", {
       post: post,
       positive: true
-    })
+    }, false)
     .then(data => {
       setVotes(old => old + 1 * (hasVoted === VotingOptions.Downvote ? 2 : 1))
       setHasVoted(VotingOptions.Upvote)
@@ -46,7 +46,7 @@ export default function VoteButtons({ post, net_votes, className="" }: VoteButto
     apiPost("votes/", {
       post: post,
       positive: false
-    })
+    }, false)
     .then(data => {
       setVotes(old => old - 1 * (hasVoted === VotingOptions.Upvote ? 2 : 1))
       setHasVoted(VotingOptions.Downvote)

@@ -25,7 +25,7 @@ export default function BookmarkButton({ objectId, contentType, className=""}: B
     apiPost('bookmarks/', {
       content_type: contentType,
       object_id: objectId
-    })
+    }, false)
     .then(data => {
       setAlreadyBookmarked(true);
     })

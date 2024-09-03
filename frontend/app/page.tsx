@@ -5,10 +5,23 @@ import { useEffect, useState } from 'react'
 import { apiGet } from '@/utils/api'
 import Subject from '@/interfaces/Subject'
 
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+
+interface Community {
+  id: number;
+  name: string;
+  private: boolean;
+}
+
 export default function Home() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [privateCommunities, setPrivateCommunities] = useState([]);
-  const [posts, setPosts] = useState({});
+  const [privateCommunities, setPrivateCommunities] = useState<Community[]>([]);
+  const [posts, setPosts] = useState<{ [key: number]: Post[] }>({});
 
   useEffect(() => {
     apiGet("subjects")

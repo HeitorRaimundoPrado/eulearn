@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { apiPost } from '@/utils/api';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
@@ -15,7 +15,7 @@ export default function Page() {
     password: ""
   })
 
-  const handleCreateCommunity = (e) => {
+  const handleCreateCommunity = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     apiPost('communities/', newCommunity)
     .then(data => alert("Comunidade criada com sucesso!"))
@@ -38,7 +38,12 @@ export default function Page() {
         {
           newCommunity.private &&
           <div>
-            <Input type="password" placeholder="Senha" onChange={(e) => setNewCommunity({...newCommunity, password: e.target.value})}/>
+            <Input 
+              type="password" 
+              placeholder="Senha" 
+              className="block"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCommunity({...newCommunity, password: e.target.value})}
+            />
           </div>
         }
         <button className="w-content bg-primary py-2 px-4 rounded-3xl mt-4">Criar comunidade</button>

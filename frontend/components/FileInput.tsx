@@ -1,10 +1,11 @@
 import { IoMdAttach } from 'react-icons/io';
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from 'react'
 
-interface FileInputProps {
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void,
-  className?: string
+type FileInputProps = {
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 }
+
 export default function FileInput({ onChange, className=""}: FileInputProps) {
   return (
     <div className={className}>

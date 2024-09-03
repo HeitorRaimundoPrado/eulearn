@@ -7,7 +7,15 @@ type PageProps = {
   params: { name: string, post: string }
 }
 
-async function Answers({ answers }) {
+type AnswersProps = {
+  answers: string[]; 
+}
+
+interface Attachment {
+  file: string;
+}
+
+async function Answers({ answers }: AnswersProps) {
   let answerProps = [];
 
   for (const ansId of answers) {
@@ -23,7 +31,7 @@ async function Answers({ answers }) {
         <div className="w-6 h-6 bg-white-100 rounded-3xl mb-4"/>
         <p className="ml-2 mb-2">{ans.content}</p>
 
-        <AnswerActionsComponent parent_post={ans.id} net_votes={ans.net_votes}/>
+        <AnswerActionsComponent parentPost={ans.id} netVotes={ans.net_votes}/>
         <Answers answers={ans.answers}/>
       </div>
     )
@@ -31,7 +39,8 @@ async function Answers({ answers }) {
 }
 
   export default async function Page({ params }: PageProps) {
-  const { name, post } = params;
+  const { name } = params;
+  const post = parseInt(params.post)
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/post/${post}`, { cache: 'no-store' } )
@@ -43,12 +52,12 @@ async function Answers({ answers }) {
         <div className="flex flex-col mb-6 w-full">
           <p className="text-justify w-[70%]">{data.content}</p>
           {
-            data.attachments.map((att, idx) => {
+            data.attachments.map((att: Attachment, idx: number) => {
               return <img src={att.file} alt="Não foi possível carregar a imagem" key={idx}/>
             })
           }
         </div>
-        <VoteButtons post={data.id} net_votes={data.net_votes}/>
+        <VoteButtons post={data.id} className='block' net_votes={data.net_votes}/>
         <AddAnswerComponent className="mt-6" parent_post={post}  buttonClass="mb-4"/>
         <Answers answers={data.answers}/>
     </div>

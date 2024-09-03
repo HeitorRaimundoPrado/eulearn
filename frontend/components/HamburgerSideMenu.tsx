@@ -26,67 +26,71 @@ import { IoMdInformationCircle } from "react-icons/io";
 import { useSidebar } from '@/context/MenuContext'
 
 export interface Subject {
-	id: string;
-	name: string;
+    id: string;
+    name: string;
 }
 
 export default function HamburgerSideMenu() {
-	const [subjects, setSubjects] = useState<Subject[]>([])
-	const pathname = usePathname();
-	const [open, setOpen] = useState<null | number>(null);
+    const [subjects, setSubjects] = useState<Subject[]>([])
+    const pathname = usePathname();
+    const [open, setOpen] = useState<null | number>(null);
     const { isSideNavOpen } = useSidebar()
 
-	const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
-	const [hydrated, setHydrated] = useState<boolean>(false);
+    const [isLoggedIn, setIsLoggedIn] = useGlobalStore((state) => [state.isLoggedIn, state.setIsLoggedIn]);
+    const [hydrated, setHydrated] = useState<boolean>(false);
 
-	useEffect(() => {
-		apiGet("subjects")
-			.then(data => {
-				setSubjects(data)
-			})
-			.catch(err => alert(err))
+    useEffect(() => {
+        apiGet("subjects")
+            .then(data => {
+                setSubjects(data)
+            })
+            .catch(err => alert(err))
 
-		setHydrated(true);
-	}, [])
+        setHydrated(true);
+    }, [])
 
-	const handleClick = (index: number | null) => {
-		setOpen(open === index ? null : index);
-	};
+    const handleClick = (index: number | null) => {
+        setOpen(open === index ? null : index);
+    };
 
-	let tabs = [
-		{
-			tab1: "Fórum Principal",
-			tab2: "Exercícios resolvidos",
-			tab3: "Lista de exercícios",
-			tab4: "Fórum informal"
-		}
-	]
+    let tabs = [
+        {
+            tab1: "Fórum Principal",
+            tab2: "Exercícios resolvidos",
+            tab3: "Lista de exercícios",
+            tab4: "Fórum informal"
+        }
+    ]
 
-	return (
-		<div className='absolute left-0 top-[61px] z-50 h-full w-full block xl:hidden'>
+    return (
+        <div className='absolute left-0 top-[61px] z-50 h-full w-full block xl:hidden'>
             <div className={`h-full w-6/12 bg-background top-10 block xl:hidden border-r-[1px] border-white-20 px-5 py-6 ${isSideNavOpen ? 'block' : 'hidden'}`}>
                 <div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 border-b-[1px] pb-3 border-white-20">
+
                     <Link
                         href="/"
                         className={`h-10 w-12/12 rounded-lg pl-4
-                        flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
-                        ${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+    flex flex-row justify-left items-center gap-3
+    hover:text-white-100 duration-200 
+    ${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                     >
+
                         {pathname == '/' ?
                             <GoHomeFill className="w-6 h-6" /> :
                             <GoHome className="w-6 h-6" />
                         }
+
                         <p className='text-sm font-normal'>
                             Página Inicial
                         </p>
                     </Link>
+
                     <Link
                         href="/chat-messages"
                         className={`h-10 w-12/12 rounded-lg pl-4
-                        flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
-                        ${pathname == '/chat-messages' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+    flex flex-row justify-left items-center gap-3
+    hover:text-white-100 duration-200 
+    ${pathname == '/chat-messages' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                     >
                         {
                             pathname == '/chat-messages' ?
@@ -100,9 +104,9 @@ export default function HamburgerSideMenu() {
                     <Link
                         href="/create-community"
                         className={`h-10 w-12/12 rounded-lg pl-4
-                        flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
-                        ${pathname == '/create-community' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+    flex flex-row justify-left items-center gap-3
+    hover:text-white-100 duration-200 
+    ${pathname == '/create-community' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                     >
                         {
                             pathname == '/create-community' ?
@@ -115,13 +119,14 @@ export default function HamburgerSideMenu() {
                     </Link>
                     {
                         subjects.map((subject, idx) => (
+
                             <Link
                                 key={subject.id}
                                 href={`/subject/${subject.id}/create-list`}
                                 className={`h-10 w-12/12 rounded-lg pl-4
-                                    flex flex-row justify-left items-center gap-3
-                                    hover:text-white-100 duration-200
-                                    ${pathname == '/create' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+                flex flex-row justify-left items-center gap-3
+                hover:text-white-100 duration-200 
+                ${pathname == '/create' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                             >
                                 {
                                     pathname == '/create' ?
@@ -135,98 +140,88 @@ export default function HamburgerSideMenu() {
                         ))
                     }
                 </div>
+
                 <div className=" pb-0 border-b-[1px] border-white-20">
                     <h2 className="w-full opacity-[40%] px-4 py-2">DISCIPLINAS</h2>
                     <ul>
-                        {/*{
-                            subjects.map(subj => {
-                                return (
-                                    <Link key={subj.id} href={`/subject/${subj.id}`} className="opacity-[80%] flex flex-row justify-between my-4 items-center">
-                                        <p className="text-sm font-normal overflow-hidden whitespace-nowrap text-ellipsis">
-                                            # {subj.name}
+                        <li>
+                            <p
+                                className={`h-10 w-full rounded-lg px-4
+                                flex flex-row justify-between items-center
+                                hover:text-white-100 duration-200 
+                                ${open === 0 ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
+                                duration-200 cursor-pointer`}
+                                onClick={() => handleClick(0)}
+                            >
+                                {
+                                    subjects.map(subj => {
+                                        return (
+                                            <Link key={subj.id} href={`/subject/${subj.id}`}>
+                                                <p className="text-sm font-normal">
+                                                    # {subj.name}
+                                                </p>
+                                                {pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
+                                            </Link>
+                                        )
+                                    })
+                                }
+                            </p>
+
+                            <div
+                                style={{ display: open === 0 ? 'block' : 'none' }}
+                                className="w-full py-3"
+                            >
+                                <div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
+                                    <Link href="/" >
+                                        <p className={`h-9 w-full rounded-r-lg pl-4
+                                        flex justify-left items-center 
+                                        text-sm font-normal duration-200
+                                        ${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+                                            Fórum Principal
                                         </p>
-                                        <SlArrowDown  className="w-5 h-auto" />
                                     </Link>
-                                )
-                            })
-                        }*/}
-                        {tabs.map((tab, index) => (
-                            <ul key={index}>
-                                <li
-                                    className={`h-10 w-full rounded-lg px-4
-                                    flex flex-row justify-between items-center
-                                    hover:text-white-100 duration-200
-                                    ${open === index ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
-                                    duration-200 cursor-pointer`}
-                                    onClick={() => handleClick(index)}
-                                >
-                                    {
-                                        subjects.map(subj => {
-                                            return (
-                                                <Link key={subj.id} href={`/subject/${subj.id}`}>
-                                                    <p className="text-sm font-normal">
-                                                        # {subj.name}
-                                                    </p>
-                                                    {pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
-                                                </Link>
-                                            )
-                                        })
-                                    }
-                                </li>
-                                <div
-                                    style={{ display: open === index ? 'block' : 'none' }}
-                                    className="w-full py-3"
-                                >
-                                    <div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
-                                        <Link href="/" >
-                                            <p className={`h-9 w-full rounded-r-lg pl-4
-                                            flex justify-left items-center
-                                            text-sm font-normal duration-200
-                                            ${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-                                                {tab.tab1}
-                                            </p>
-                                        </Link>
-                                        <Link href="/" >
-                                            <p className={`h-9 w-full rounded-r-lg pl-4
-                                            flex justify-left items-center
-                                            text-sm font-normal
-                                            ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-                                                {tab.tab2}
-                                            </p>
-                                        </Link>
-                                        <Link href="/" >
-                                            <p className={`h-9 w-full rounded-r-lg pl-4
-                                            flex justify-left items-center
-                                            text-sm font-normal
-                                            ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-                                                {tab.tab3}
-                                            </p>
-                                        </Link>
-                                        <Link href="/" >
-                                            <p className={`h-9 w-full rounded-r-lg pl-4
-                                            flex justify-left items-center
-                                            text-sm font-normal
-                                            ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-                                                {tab.tab4}
-                                            </p>
-                                        </Link>
-                                    </div>
+                                    <Link href="/" >
+                                        <p className={`h-9 w-full rounded-r-lg pl-4
+                                        flex justify-left items-center 
+                                        text-sm font-normal 
+                                        ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+                                            Exercícios resolvidos
+                                        </p>
+                                    </Link>
+                                    <Link href="/" >
+                                        <p className={`h-9 w-full rounded-r-lg pl-4
+                                        flex justify-left items-center 
+                                        text-sm font-normal 
+                                        ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+                                            Lista de exercícios
+                                        </p>
+                                    </Link>
+                                    <Link href="/" >
+                                        <p className={`h-9 w-full rounded-r-lg pl-4
+                                        flex justify-left items-center 
+                                        text-sm font-normal 
+                                        ${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+                                            Fórum informal
+                                        </p>
+                                    </Link>
                                 </div>
-                            </ul>
-                        ))}
+
+                            </div>
+                        </li>
                     </ul>
                     <SlArrowDown className="h-6 w-6 pb-2 opacity-[20%] m-auto cursor-pointer" />
                 </div>
-                <div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
+
+                <div className="flex flex-col gap-3 pt-3">
                     {
                         (hydrated && isLoggedIn) &&
-                        <div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 pt-3">
+                        <div className="flex flex-col gap-3 pt-3">
                             <Link
                                 href="/settings"
                                 className={`h-10 w-12/12 rounded-lg pl-4
-                        flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
-                        ${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+                                flex flex-row justify-left items-center gap-3
+                                hover:text-white-100 duration-200 
+                                ${pathname == '/settings' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                             >
                                 {
                                     pathname == '/settings' ?
@@ -237,12 +232,13 @@ export default function HamburgerSideMenu() {
                                     Configurações
                                 </p>
                             </Link>
+
                             <Link
                                 href="/bookmarks"
                                 className={`h-10 w-12/12 rounded-lg pl-4
-                        flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
-                        ${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
+                                flex flex-row justify-left items-center gap-3
+                                hover:text-white-100 duration-200 
+                                ${pathname == '/bookmarks' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                             >
                                 {
                                     pathname == '/bookmarks' ?
@@ -255,11 +251,12 @@ export default function HamburgerSideMenu() {
                             </Link>
                         </div>
                     }
+
                     <Link
                         href="/about"
                         className={`h-10 w-12/12 rounded-lg pl-4
                         flex flex-row justify-left items-center gap-3
-                        hover:text-white-100 duration-200
+                        hover:text-white-100 duration-200 
                         ${pathname == '/about' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}
                     >
                         {
@@ -274,5 +271,5 @@ export default function HamburgerSideMenu() {
                 </div>
             </div >
         </div>
-	)
+    )
 }

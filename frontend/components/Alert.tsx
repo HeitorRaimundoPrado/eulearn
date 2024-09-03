@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/alert-dialog"
 
 interface AlertProps {
-  message: string,
-  open: boolean,
-  onOpenChange: (d: any) => any,
-  title: string
+  message: string;
+  open: boolean;
+  onOpenChange: (d: boolean) => void;
+  title: string;
 }
 
 export default function Alert({ message, open, onOpenChange, title }: AlertProps) {

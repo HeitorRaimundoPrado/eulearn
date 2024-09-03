@@ -1,4 +1,5 @@
 import Post from '@/interfaces/Post'
+
 export default function apiServer() {
   return {
     posts: {

@@ -34,7 +34,7 @@ export default function NavBar() {
 
     const handleLogout = () => {
         console.log("calling apiPost")
-        apiPost('api/logout', { refresh_token: localStorage.getItem('refresh_token') })
+        apiPost('api/logout', { refresh_token: localStorage.getItem('refresh_token') }, false)
             .then((status) => {
                 localStorage.removeItem('refresh_token');
                 localStorage.removeItem('access_token');

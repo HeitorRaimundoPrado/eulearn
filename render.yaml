@@ -86,5 +86,18 @@ services:
       - key: NEXT_PUBLIC_BACKEND_URI
         sync: false
 
+      - key: REMOTE_IMAGE_PROTOCOL,
+        sync: false
 
+      - key: REMOTE_IMAGE_HOSTNAME,
+        sync: false
+
+      - key: REMOTE_IMAGE_PORT
+        sync: false
+
+      - key: REMOTE_IMAGE_PORT,
+        sync: false
+
+      - key: REMOTE_IMAGE_PATHNAME
+        sync: false
 

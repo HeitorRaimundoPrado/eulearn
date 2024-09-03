@@ -5,14 +5,16 @@ import { useEffect, useState } from 'react';
 import { apiPost, apiGet } from '@/utils/api';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Answer from '@/interfaces/Answer';
+import { AnswerCreate } from '@/interfaces/Answer';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import { Label } from "@/components/ui/label"
+import { ChangeEvent } from 'react'
 
-interface CreateQuestionProps {
-  subjId: number,
-  createQuestionCallback: (d: any) => void,
-  className?: string
+type CreateQuestionProps = {
+  subjId: string;
+  createQuestionCallback: (data: any) => void;
+  className?: string;
 }
 
 export default function CreateQuestion({ subjId, createQuestionCallback, className="" }: CreateQuestionProps) {
@@ -22,8 +24,8 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     subject: subjId
   })
 
-  const [answers, setAnswers] = useState<Answer[]>([])
-  const [newAnswer, setNewAnswer] = useState<Answer>({
+  const [answers, setAnswers] = useState<AnswerCreate[]>([])
+  const [newAnswer, setNewAnswer] = useState<AnswerCreate>({
     content: "",
     is_correct: false
   })
@@ -41,15 +43,15 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     })
   }
 
-  const handleChangeCorrect = (idx: string) => {
-    let answers_ = answers.map(a => {
-      return {...a, is_correct: false }
-    });
+  const handleChangeCorrect = (value: string) => {
+    const idx = parseInt(value, 10);
+    const updatedAnswers = answers.map((a, i) => ({
+      ...a,
+      is_correct: i === idx
+    }));
 
-    answers_[parseInt(idx)].is_correct = true;
-    setAnswers(answers_)
-    console.log(answers_)
-  }
+    setAnswers(updatedAnswers);
+  };
 
   const createQuestion = () => {
     let is_valid = 0;
@@ -67,7 +69,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
      ...question,
      answers: answers,
      subject: subjId
-   })
+    }, false)
     .then(data => {
       createQuestionCallback(data)
     })
@@ -76,11 +78,11 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
   return (
     <div className={`${className} [&>*]:w-full`}>
       <div className="mb-4">
-        <Input placeholder={"Enunciado"} onChange={e => setQuestion({...question, statement: e.target.value})} className="w-[60%]"/>
+        <Input placeholder={"Enunciado"} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuestion({...question, statement: e.target.value})} className="w-[60%]"/>
       </div>
 
       <div className="mb-4">
-        <Textarea onChange={e => setQuestion({...question, explanation: e.target.value})} placeholder={"Explicação"} className="h-56 w-[60%]"/>
+        <Textarea onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuestion({...question, explanation: e.target.value})} placeholder={"Explicação"} className="h-56 w-[60%]"/>
       </div>
 
       <RadioGroup className="my-2 px-4 p-2" onValueChange={handleChangeCorrect}>
@@ -96,7 +98,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
       </RadioGroup>
             
       <div className="flex flex-row justify-between !w-[60%]">
-        <Input onChange={(e) => setNewAnswer(ans => {
+        <Input onChange={(e: any) => setNewAnswer(ans => {
             return {...ans, content: e.target.value}
           })} className="w-[60%]" placeholder="Nova Resposta"
           />

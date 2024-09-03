@@ -6,10 +6,12 @@ import apiServer from '@/utils/apiServer'
 type PageProps = { 
   params: { name: string }
 }
+
 export default async function Page({ params }: PageProps) {
   const { name } = params;
   const db = apiServer();
   const latestPosts: Post[] = await db.posts.getAuthors(await db.posts.filter(name));
+
   console.log(latestPosts)
 
   return (
@@ -26,7 +28,12 @@ export default async function Page({ params }: PageProps) {
               </Link>
               <div className="mt-4 flex flex-row items-center">
                 <div className="w-6 h-6 rounded-3xl bg-white-100 mr-4"/>
-                <UserLinkContext username={post.author.username} id={post.author_id}/>
+                {
+                  (post.author && post.author_id) ?
+                    <UserLinkContext username={post.author.username} id={post.author_id}/>
+                    :
+                    <h2>Erro carregando usuário</h2>
+                }
               </div>
             </li>
           )
