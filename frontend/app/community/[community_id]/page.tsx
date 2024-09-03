@@ -10,6 +10,13 @@ interface JoinCommunityProps {
   successCallback: (data: any) => void
 }
 
+interface CommunityData {
+  name: string;
+  description: string;
+  current_user_is_member: boolean;
+  posts: Array<{ id: number; title: string }>;
+}
+
 function JoinCommunityForm ({ communityId, successCallback }: JoinCommunityProps) {
   const [password, setPassword] = useState("");
 
@@ -37,7 +44,7 @@ interface PageProps {
 export default function Page({ params }: PageProps) {
   const { community_id } = params;
 
-  const [community, setCommunity] = useState(null);
+  const [community, setCommunity] = useState<CommunityData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,17 +55,19 @@ export default function Page({ params }: PageProps) {
       });
     }, [community_id])
 
-  const handleJoinCommunity = (data) => {
-    console.log(data)
-    setCommunity(data);
-    alert("Você entrou na comunidade!")
-  }
+    const handleJoinCommunity = (data: CommunityData) => {
+      console.log(data);
+      setCommunity(data);
+      alert("Você entrou na comunidade!");
+    };
 
   if (loading || community === null) {
     return (
       <div>carregando...</div>
     )
   }
+
+  const communityId = parseInt(community_id, 10);
   
   return (
     <div>
@@ -66,7 +75,7 @@ export default function Page({ params }: PageProps) {
       <p className="text-white-60 mb-10">{community.description}</p>
       {
         !community.current_user_is_member &&
-          <JoinCommunityForm communityId={community_id} successCallback={handleJoinCommunity}/>
+          <JoinCommunityForm communityId={communityId} successCallback={handleJoinCommunity}/>
       }
 
       {

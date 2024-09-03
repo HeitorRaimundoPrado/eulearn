@@ -6,6 +6,7 @@ import apiServer from '@/utils/apiServer'
 type PageProps = { 
   params: { name: string }
 }
+
 export default async function Page({ params }: PageProps) {
   const { name } = params;
   const db = apiServer();

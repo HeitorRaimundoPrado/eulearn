@@ -32,8 +32,17 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { name } = params;
 
-  const id = await getSubjId(name)
-  const questions = await getQuestions(id)
+  const subject = await getSubjId(name)
+
+  if (!subject) {
+    return (
+      <div>
+        <p>No subject found.</p>
+      </div>
+    );
+  }
+
+  const questions = await getQuestions(subject.id)
 
 
   return (

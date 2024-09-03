@@ -2,12 +2,27 @@
 import { useEffect, useState } from 'react'
 import { apiGet } from '@/utils/api'
 
-export default function Page({params}) {
+interface Params {
+  name: string;
+  question_uuid: string;
+}
+
+interface Answer {
+  id: string;
+  content: string;
+}
+
+interface Question {
+  statement: string;
+  answers: Answer[];
+}
+
+export default function Page({ params }: { params: Params }) {
   const { name, question_uuid } = params;
 
-  const [question, setQuestion] = useState(null);
-  const [selectedAns, setSelectedAns] = useState(null);
-  const [explanation, setExplanation] = useState("");
+  const [question, setQuestion] = useState<Question | null>(null);
+  const [selectedAns, setSelectedAns] = useState<string | null>(null);
+  const [explanation, setExplanation] = useState<string>("");
   
   useEffect(() => {
     apiGet(`question/${question_uuid}`)
@@ -55,7 +70,7 @@ export default function Page({params}) {
       <h1>{question.statement}</h1>
       <ul>
       {
-        question.answers.map((ans, idx) => (
+        question.answers.map((ans: Answer, idx: number) => (
           <div key={idx}>
             <label>{ans.content}</label>
             <input type="radio" onChange={() => setSelectedAns(ans.id)} checked={ans.id === selectedAns}/>

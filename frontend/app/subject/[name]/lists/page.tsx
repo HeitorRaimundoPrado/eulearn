@@ -5,7 +5,13 @@ import Test from '@/interafaces/Test'
 import { useState, useEffect } from 'react';
 import { apiGet } from '@/utils/api'
 
-export default  function Page({ params }) {
+interface PageParams {
+  params: {
+    name: string;
+  };
+}
+
+export default function Page({ params }: PageParams) {
   const { name } = params;
 
   const [subjId, setSubjId] = useState(null);

@@ -6,7 +6,17 @@ import CreateQuestion from '@/components/CreateQuestion'
 import Question from '@/interfaces/Question';
 import Input from '@/components/Input';
 
-export default function Page({ params }) {
+interface Params {
+  name: string;
+}
+
+interface Test {
+  title: string;
+  subject: number;
+  questions: Question[];
+}
+
+export default function Page({ params }: { params: Params }) {
   const { name } = params;
   const [subjId, setSubjId] = useState(null);
   const [newQuestion, setNewQuestion] = useState(false);
@@ -36,7 +46,7 @@ export default function Page({ params }) {
     }
   }, [subjId])
 
-  const handleAddQuestion = (question) => {
+  const handleAddQuestion = (question: Question) => {
     if (newTest.questions.includes(question)) {
       return;
     }
@@ -44,7 +54,7 @@ export default function Page({ params }) {
     setNewTest({...newTest, questions: [...newTest.questions, question]})
   }
 
-  const handleCreateNewQuestion = (question) => {
+  const handleCreateNewQuestion = (question: Question) => {
     setNewQuestion(false);
     setNewTest({...newTest, questions: [...newTest.questions, question]})
     alert("Nova questão criada com sucesso")
@@ -97,7 +107,7 @@ export default function Page({ params }) {
 
       {
         newQuestion ?
-          <CreateQuestion subjId={subjId} createQuestionCallback={handleCreateNewQuestion}/>
+          <CreateQuestion subjId={subjId ?? ''} createQuestionCallback={handleCreateNewQuestion}/>
           :
           <button className="w-fit p-2 bg-secondary border-white border-2 border-opacity-[60%] rounded-md" onClick={() => setNewQuestion(true)}>Criar nova questão</button>
       }
