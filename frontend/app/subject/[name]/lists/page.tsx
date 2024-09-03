@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import Test from '@/interafaces/Test'
+import Test from '@/interfaces/Test'
 import { useState, useEffect } from 'react';
 import { apiGet } from '@/utils/api'
 

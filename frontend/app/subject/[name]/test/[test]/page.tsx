@@ -52,7 +52,6 @@ function MapAnswers({ question, selectAnswer }: MapAnswersProps) {
         <div key={ans.id} className="flex flex-row mb-2 items-center">
           <RadioGroupItem
             className="mr-4"
-            name={`${question.id}`}
             value={ans.id.toString()}
             checked={selectedAnsId === ans.id}
           />

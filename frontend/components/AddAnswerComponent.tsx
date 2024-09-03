@@ -6,20 +6,20 @@ import { useRouter } from 'next/navigation';
 import { apiPost } from '@/utils/api';
 
 type AnswerFormProps = {
-  parent_post: string; 
+  parent_post: number; 
   closeForm: () => void;
   className?: string;
 };
 
 type AddAnswerComponentProps = {
-  parent_post: string; 
+  parent_post: number; 
   className?: string;
   buttonClass?: string;
 };
 
 type AnswerState = {
   content: string;
-  parent_post: string; 
+  parent_post: number; 
 };
 
 export function AnswerForm({ parent_post, closeForm, className = "" }: AnswerFormProps) {

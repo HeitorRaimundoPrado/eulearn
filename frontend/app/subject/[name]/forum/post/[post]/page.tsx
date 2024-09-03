@@ -31,7 +31,7 @@ async function Answers({ answers }: AnswersProps) {
         <div className="w-6 h-6 bg-white-100 rounded-3xl mb-4"/>
         <p className="ml-2 mb-2">{ans.content}</p>
 
-        <AnswerActionsComponent parent_post={ans.id} net_votes={ans.net_votes}/>
+        <AnswerActionsComponent parentPost={ans.id} netVotes={ans.net_votes}/>
         <Answers answers={ans.answers}/>
       </div>
     )
@@ -39,7 +39,8 @@ async function Answers({ answers }: AnswersProps) {
 }
 
   export default async function Page({ params }: PageProps) {
-  const { name, post } = params;
+  const { name } = params;
+  const post = parseInt(params.post)
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/post/${post}`, { cache: 'no-store' } )
