@@ -4,13 +4,14 @@ import { ChangeEvent } from 'react'
 type FileInputProps = {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  accept: string;
 }
 
-export default function FileInput({ onChange, className=""}: FileInputProps) {
+export default function FileInput({ onChange, accept, className=""}: FileInputProps) {
   return (
     <div className={className}>
       <label  htmlFor="file-input"><IoMdAttach className="h-auto w-8 hover:cursor-pointer"/></label>
-      <input type="file" onChange={onChange} className="hidden" id="file-input"/>
+      <input type="file" onChange={onChange} className="hidden" id="file-input" accept={accept}/>
     </div>
   )
 }

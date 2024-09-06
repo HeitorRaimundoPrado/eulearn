@@ -3,7 +3,7 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { apiPost } from "@/utils/api";
 import Input from './Input';
-import Textarea from './Textarea';
+import TextEditor from './TextEditor';
 import FileInput from './FileInput';
 
 type NewPostFormProps = {
@@ -18,7 +18,6 @@ interface NewPostProps {
 }
 
 export default function NewPostForm({ is_private, community=null, subject=null }: NewPostProps) {
-  const [file, setFile] = useState<File | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -28,37 +27,41 @@ export default function NewPostForm({ is_private, community=null, subject=null }
     subject: subject
   })
   
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    apiPost("posts/", form, false)
-    .then(data => {
-      if (file !== null) {
-        const formData = new FormData();
-        formData.append('file', file)
-        formData.append('post', data.id)
-        apiPost('post-attachment/', formData, true)
-        .then(data => alert('Post criado com sucesso!'))
-        return;
-      }
+    const formData = new FormData();
+    formData.append('title', form.title)
+    formData.append('content', form.content)
+    formData.append('parent_post', "")
+    formData.append('private', form.private ? form.private.toString() : "")
+    formData.append('community', form.community ? form.community.toString() : "")
+    formData.append('subject', form.subject ? form.subject.toString() : "")
 
-      alert('Post criado com sucesso')
+    const parsedContent = JSON.parse(form.content)
+    let idx = 0;
+    for (const c of parsedContent) {
+      if (c.type === "image") {
+        const res = await fetch(c.url);
+        const f = await res.blob();
+        formData.append('files', f)
+        idx++;
+      }
+    }
+
+    apiPost("posts/", formData, true)
+    .then(data => {
+      alert('Post criado com sucesso!')
     })
   }
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0])
-    }
-  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-full">
+    <div className="flex flex-col w-full">
       <div className="w-full">
         <Input onChange={e => setForm({...form, title: e.target.value})} placeholder="Título" className="w-[60%] mb-4"/>
       </div>
-      <Textarea onChange={(e: any) => setForm({...form, content: e.target.value})} placeholder="Conteúdo" className="w-[60%] mb-4 h-56"/>
-      <FileInput onChange={handleFileChange}/>
-      <button className="w-fit p-2 rounded-md bg-primary mt-4">Publicar</button>
-    </form>
+      <TextEditor onChange={(c) => setForm(oldForm => ({...oldForm, content: JSON.stringify(c)}))}/>
+      <button onClick={handleSubmit} className="w-fit p-2 rounded-md bg-primary mt-4">Publicar</button>
+    </div>
   )
 }

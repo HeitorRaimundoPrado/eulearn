@@ -37,7 +37,6 @@ class CommunityListCreateView(generics.ListCreateAPIView):
 
         community.users_joined.add(self.request.user)
         community.creator = self.request.user
-        print('here')
         return community.save()
 
 

@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import UserProfileSerializer, UserSerializer
+from .serializers import UserProfileSerializer, UserSerializer, UserSettingsSerializer
 from django.contrib.auth import get_user_model
 from subjects.serializers import VotesSerializer
-from .models import UserProfile
+from .models import UserProfile, UserSettings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,12 +16,10 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            print(request.data)
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserRetrieveView(generics.RetrieveAPIView):
@@ -36,6 +34,15 @@ class UserProfileRetrieveView(generics.RetrieveAPIView):
     def get_object(self):
         user = self.request.user
         return UserProfile.objects.get(user=user)
+
+
+class UserSettingsRetrieveView(generics.RetrieveAPIView):
+    serializer_class = UserSettingsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        user = self.request.user
+        return UserSettings.objects.get(user=user)
 
 
 class UserVotesRetrieveView(generics.RetrieveAPIView):
