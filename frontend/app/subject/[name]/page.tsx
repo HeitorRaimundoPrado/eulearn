@@ -19,8 +19,6 @@ export default async function Page({ params }: PageProps) {
 
   const posts: Post[] = (await (await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URI}/posts/?subj=${name}`)).json()).results;
 
-  console.log(posts)
-
   return (
     <div>
       <div className="[&_h2]:font-bold [&_h2]:uppercase [&>*]:mb-6">

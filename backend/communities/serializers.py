@@ -6,7 +6,6 @@ from subjects.serializers import PostSerializer
 
 class CommunitySerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, allow_blank=True, required=False)
-    posts = PostSerializer(many=True, read_only=True)
     current_user_is_member = serializers.SerializerMethodField()
 
     class Meta:

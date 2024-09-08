@@ -66,7 +66,8 @@ class PostListView(viewsets.ModelViewSet):
             """
             for node in content:
                 if node.get('type') == 'image' and 'url' in node:
-                    file_name = default_storage.generate_filename(node['file_name'])
+                    file_name = node['file_name']
+                    print("file_name")
                     print(file_name)
                     print(uploaded_files)
                     if file_name in uploaded_files:
@@ -100,12 +101,12 @@ class PostListView(viewsets.ModelViewSet):
             )
 
             
-            uploaded_files[pa.file.url.split('/')[-1].split('?')[0]] = pa.file
+            uploaded_files[file.name] = pa.file
             pa.save()
 
         content = json.loads(request.data.get('content', '[]'))
         post.save()
-        updated_content = update_image_urls(content, uploaded_files)
+        updated_content = json.dumps(update_image_urls(content, uploaded_files))
         post.content = updated_content
         post.save()
 

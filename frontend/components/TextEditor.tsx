@@ -1,6 +1,7 @@
 import { 
   useState,
   useCallback,
+  useMemo,
   ChangeEvent,
   KeyboardEvent
 } from 'react';
@@ -69,7 +70,7 @@ const withImage = (editor: Editor) => {
   return editor;
 }
 
-export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) => void}) {
+export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) => void, className?: string}) {
   const [editor] = useState(() => withImage((withReact(createEditor()))))
   const [files, setFiles] = useState<File[]>([])
 
@@ -114,19 +115,25 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
         const ext = fileSplit[fileSplit.length - 1]
 
         setFiles(oldFiles =>  [...oldFiles, file])
-        insertImage(editor, URL.createObjectURL(file), baseName + '-' +  files.length.toString() + '.' + ext)
+        const newFileName = baseName + '-' +  files.length.toString() + '.' + ext
+        insertImage(editor, URL.createObjectURL(new File([file], newFileName)), newFileName)
     }
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Backspace') {
-      const [match] = Array.from(Editor.nodes(editor, {
-        match: (n) => Node.isNode(n)&& Element.isElement(n) && n.type === 'image',
+      const matches = Array.from(Editor.nodes(editor, {
+        match: (n) => Element.isElement(n) && n.type === 'image',
       }));
 
-      if (match) {
-        event.preventDefault();
-        Transforms.removeNodes(editor, { at: match[1] });
+      if (matches.length > 0) {
+        const removePositions = matches.map(match => match[1])
+        removePositions.sort((a, b) => b[b.length - 1] - a[a.length -1]);
+
+        removePositions.forEach(pos => {
+          console.log(pos)
+          Transforms.removeNodes(editor, { at: pos  });
+        })
       }
     }
   };
@@ -142,3 +149,34 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
       </div>
   )
 }
+
+interface RichTextProps {
+  value: string;
+  className?: string;
+  withImages?: boolean;
+}
+
+export function RichText({ value , className="", withImages=false }: RichTextProps) {
+  const editor = useMemo(() => withReact(createEditor()), []);
+
+  const renderElement = useCallback((props: { attributes: any, children: any, element: any}) => {
+    switch(props.element.type) {
+      case "image":
+        return withImages ? (
+          <ImageElement {...props}/>
+        ) : (
+          <span>[image]</span>
+        )
+
+      default:
+        return <DefaultElement {...props}/>
+    }
+  }, [])
+
+  return (
+    <Slate editor={editor} initialValue={value}>
+      <Editable renderElement={renderElement} readOnly className={className}/>
+    </Slate>
+  );
+}
+

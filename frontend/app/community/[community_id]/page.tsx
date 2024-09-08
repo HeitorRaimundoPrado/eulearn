@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import Input from '@/components/Input';
+import PostLink from '@/components/PostLink';
 import Link from 'next/link';
 
 interface JoinCommunityProps {
@@ -14,7 +15,6 @@ interface CommunityData {
   name: string;
   description: string;
   current_user_is_member: boolean;
-  posts: Array<{ id: number; title: string }>;
 }
 
 function JoinCommunityForm ({ communityId, successCallback }: JoinCommunityProps) {
@@ -46,20 +46,29 @@ export default function Page({ params }: PageProps) {
 
   const [community, setCommunity] = useState<CommunityData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<Post[]> ([]);
 
   useEffect(() => {
+    apiGet(`community/${community_id}/posts/`)
+    .then(data => {
+      console.log(data.results)
+      setPosts(data.results)
+    })
+
     apiGet(`community/${community_id}/`)
     .then(data => {
-      setCommunity({...data, posts: data.posts ? data.posts : []})
+      setCommunity({...data})
       setLoading(false)
-      });
-    }, [community_id])
+    });
+  }, [community_id])
 
-    const handleJoinCommunity = (data: CommunityData) => {
-      console.log(data);
-      setCommunity(data);
-      alert("Você entrou na comunidade!");
-    };
+  useEffect(() => console.log(community), [community])
+
+  const handleJoinCommunity = (data: CommunityData) => {
+    console.log(data);
+    setCommunity(data);
+    alert("Você entrou na comunidade!");
+  };
 
   if (loading || community === null) {
     return (
@@ -70,7 +79,7 @@ export default function Page({ params }: PageProps) {
   const communityId = parseInt(community_id, 10);
   
   return (
-    <div>
+    <div className="flex flex-col">
       <h1 className="text-2xl font-bold mb-2">{community.name}</h1>
       <p className="text-white-60 mb-10">{community.description}</p>
       {
@@ -81,17 +90,12 @@ export default function Page({ params }: PageProps) {
       {
         community.current_user_is_member &&
         <>
-          <Link href={`/community/${community_id}/create-post`} className="bg-primary px-4 py-2 mb-4 rounded-md">Criar Novo Post</Link>
-          {
-            community.posts.map(p => {
-              return <>
-                <Link href={`/community/${community_id}/post/${p.id}`}>
-                <h2>{p.title}</h2>
-                </Link>
-              </>
-
-            })
-          }
+          <Link href={`/community/${community_id}/create-post`} className="w-fit bg-primary px-4 py-2 mb-4 rounded-md mb-4">Criar Novo Post</Link>
+            <ul className="list-none flex flex-col">
+            {
+              posts.map(p => <li className="w-[80%]"><PostLink href={`/community/${community_id}/post/${p.id}`} post={p}/></li>)
+            }
+          </ul>
           </>
       }
     </div>
