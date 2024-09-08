@@ -41,7 +41,7 @@ export default function Page() {
       </div>
       <div>
         <Switch/>
-        <Label >Notificações de DM's</Label>
+        <Label >Notificações de DM&apos;s</Label>
       </div>
       <div>
         <Switch/>

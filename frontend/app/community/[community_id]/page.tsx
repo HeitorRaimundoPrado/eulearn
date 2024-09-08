@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { apiGet, apiPost } from '@/utils/api';
 import Input from '@/components/Input';
 import PostLink from '@/components/PostLink';
+import Post from '@/interfaces/Post';
 import Link from 'next/link';
 
 interface JoinCommunityProps {
@@ -93,7 +94,7 @@ export default function Page({ params }: PageProps) {
           <Link href={`/community/${community_id}/create-post`} className="w-fit bg-primary px-4 py-2 mb-4 rounded-md mb-4">Criar Novo Post</Link>
             <ul className="list-none flex flex-col">
             {
-              posts.map(p => <li className="w-[80%]"><PostLink href={`/community/${community_id}/post/${p.id}`} post={p}/></li>)
+              posts.map(p => <li className="w-[80%]" key={p.id}><PostLink href={`/community/${community_id}/post/${p.id}`} post={p}/></li>)
             }
           </ul>
           </>

@@ -61,7 +61,7 @@ export default function Home() {
                   posts[subject.id] &&
                   posts[subject.id].map(post => {
                     return (
-                      <PostLink post={post} href={`/subject/${subject.id}/forum/post/${post.id}`} className="w-[80%]"/>
+                      <PostLink key={post.id} post={post} href={`/subject/${subject.id}/forum/post/${post.id}`} className="w-[80%]"/>
                     )
                   })
                 }

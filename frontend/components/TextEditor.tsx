@@ -151,7 +151,7 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
 }
 
 interface RichTextProps {
-  value: string;
+  value: any;
   className?: string;
   withImages?: boolean;
 }
