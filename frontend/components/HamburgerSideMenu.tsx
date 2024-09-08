@@ -64,7 +64,7 @@ export default function HamburgerSideMenu() {
 
     return (
         <div className='absolute left-0 top-[61px] z-50 h-full w-full block xl:hidden'>
-            <div className={`h-full w-6/12 bg-background top-10 block xl:hidden border-r-[1px] border-white-20 px-5 py-6 ${isSideNavOpen ? 'block' : 'hidden'}`}>
+            <div className={`h-full w-9/12 sm:w-6/12 md:w-5/12 lg:w-4/12 bg-background top-10 block xl:hidden border-r-[1px] border-white-20 px-5 py-6 ${isSideNavOpen ? 'block' : 'hidden'}`}>
                 <div className="[&>*]:flex [&>*]:flex-row flex flex-col gap-3 border-b-[1px] pb-3 border-white-20">
 
                     <Link
