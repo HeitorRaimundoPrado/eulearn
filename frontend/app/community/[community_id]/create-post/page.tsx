@@ -8,8 +8,7 @@ interface PageProps {
 
 export default function Page({ params }: PageProps) {
   const community_id = parseInt(params.community_id)
-
   return (
-    <NewPostForm is_private={true} community={community_id} subject={null} />
+     <NewPostForm is_private={true} community={community_id} subject={null}/> 
   )
 }

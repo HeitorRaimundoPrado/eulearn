@@ -10,10 +10,11 @@ enum VotingOptions {
  Novote,
  Upvote
 }
+
 interface VoteButtonsProps {
-  post: number,
-  net_votes: number,
-  className: string
+  post: number;
+  net_votes: number;
+  className: string;
 }
 
 export default function VoteButtons({ post, net_votes, className="" }: VoteButtonsProps) {

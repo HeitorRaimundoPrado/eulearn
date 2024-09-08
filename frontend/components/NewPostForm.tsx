@@ -6,15 +6,10 @@ import Input from './Input';
 import TextEditor from './TextEditor';
 import FileInput from './FileInput';
 
-type NewPostFormProps = {
-  is_private: string
-  community: null
-  subject: null
-}
 interface NewPostProps {
   is_private: boolean,
   community?: number | null,
-  subject: string | null
+  subject?: number | null
 }
 
 export default function NewPostForm({ is_private, community=null, subject=null }: NewPostProps) {

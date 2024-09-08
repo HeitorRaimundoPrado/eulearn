@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 interface UserLinkContextProps {
-  id: number,
-  username: string
+  id: number;
+  username: string;
 }
 
 export default function UserLinkContext({ id, username }: UserLinkContextProps) {

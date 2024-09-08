@@ -28,7 +28,7 @@ services:
         User.objects.create_superuser(username=username, email=email, password=password)
       "
     
-    startCommand: "pipenv run daphne backend.asgi:application"
+    startCommand: "pipenv run daphne backend.asgi:application -b 0.0.0.0"
     branch: staging
     envVars:
       - key: REDIS_URL

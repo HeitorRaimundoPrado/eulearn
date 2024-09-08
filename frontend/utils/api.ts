@@ -23,7 +23,6 @@ async function refreshToken() {
       }
 
       return res.json()
-
     })
     .then((data: RefreshTokenResponse) => {
       window.localStorage.setItem("access_token", data.access);
@@ -48,8 +47,7 @@ async function makeRequest(route: string, method: string, isRec: boolean = false
         "Authorization": string,
         "Content-Type"?: string
         "X-CSRFToken"?: string
-      }
-    
+      },
       body?: string,
       credentials?: RequestCredentials,
     } = {
