@@ -8,7 +8,7 @@ interface PostLinkProps {
   className?: string
 }
 
-export default function PostLink({ post, href, className="" }) {
+export default function PostLink({ post, href, className="" }: PostLinkProps) {
   console.log("content", post.content)
   console.log("content", JSON.parse(post.content))
   return (
