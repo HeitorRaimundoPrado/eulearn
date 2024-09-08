@@ -5,24 +5,17 @@ import { apiGet, apiPost } from '@/utils/api';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import BookmarkButton from "@/components/BookmarkButton";
+import Question from '@/interfaces/Question';
+import Test from '@/interfaces/Test';
+
+interface MapAnswersProps {
+  question: Question,
+  selectAnswer: (questionId: number, answerId: number) => void
+}
 
 interface Answer {
   id: number;
   content: string;
-}
-
-interface Question {
-  id: number;
-  statement: string;
-  answers: Answer[];
-}
-
-interface Test {
-  title: string;
-  author: number;
-  created_at: string;
-  route: string;
-  questions: Question[];
 }
 
 interface Explanation {
@@ -45,7 +38,6 @@ function MapAnswers({ question, selectAnswer }: MapAnswersProps) {
     selectAnswer(question.id, id);
     setSelectedAnsId(id);
   };
-
   return (
     <RadioGroup onValueChange={(val) => handleChangeSelectedAns(Number(val))}>
       {question.answers.map((ans, idx) => (
@@ -127,14 +119,16 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  const { name, test } = params;
+  const { name } = params;
+  const test = parseInt(params.test)
 
   const [finishedTest, setFinishedTest] = useState<boolean>(false);
   const [testObj, setTestObj] = useState<Test>({
+    id: -1,
+    subject: -1,
     title: "",
     author: -1,
     created_at: "",
-    route: "",
     questions: []
   });
 

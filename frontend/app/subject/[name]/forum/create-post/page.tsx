@@ -5,7 +5,7 @@ interface PageParams {
 }
 
 export default function Page({ params }: { params: PageParams }) {
-  const { name } = params;
+  const name = parseInt(params.name)
 
   return (
     <NewPostForm is_private={false} subject={name}/>

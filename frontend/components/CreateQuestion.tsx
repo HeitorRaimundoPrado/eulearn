@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { apiPost, apiGet } from '@/utils/api';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Answer from '@/interfaces/Answer';
+import { AnswerCreate } from '@/interfaces/Answer';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import { Label } from "@/components/ui/label"
-
 import { ChangeEvent } from 'react'
 
 type CreateQuestionProps = {
@@ -24,8 +24,8 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     subject: subjId
   })
 
-  const [answers, setAnswers] = useState<Answer[]>([])
-  const [newAnswer, setNewAnswer] = useState<Answer>({
+  const [answers, setAnswers] = useState<AnswerCreate[]>([])
+  const [newAnswer, setNewAnswer] = useState<AnswerCreate>({
     content: "",
     is_correct: false
   })
@@ -51,7 +51,6 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
     }));
 
     setAnswers(updatedAnswers);
-    console.log(updatedAnswers);
   };
 
   const createQuestion = () => {
@@ -90,7 +89,7 @@ export default function CreateQuestion({ subjId, createQuestionCallback, classNa
         {
           answers.map((answer, idx) => (
             <div className="flex flex-row mb-2 justify-between items-center" key={idx}>
-              <RadioGroupItem id={`answer_${idx}`} value={idx.toString()} checked={answer.is_correct}/> {/*name="isCorrect" is not supported*/}
+              <RadioGroupItem id={`answer_${idx}`} value={idx.toString()} checked={answer.is_correct}/>
               <Label htmlFor={`answer_${idx}`} className="text-left grow ml-4">{answer.content}</Label>
             </div>
           ))

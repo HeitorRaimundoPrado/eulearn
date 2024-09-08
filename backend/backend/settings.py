@@ -31,7 +31,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+print(os.environ.get('DEPLOY_URL'))
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', os.environ.get('DEPLOY_URL')]
 
 
 # Application definition
@@ -87,11 +89,13 @@ if IS_DEVELOPMENT:
 
 else:
     CSRF_TRUSTED_ORIGINS = [
-        os.environ.get("FRONTEND_URL")
+        os.environ.get("FRONTEND_URL"),
+        "https://" + os.environ.get("DEPLOY_URL")
     ]
 
     CORS_ALLOWED_ORIGINS = [
-        os.environ.get("FRONTEND_URL")
+        os.environ.get("FRONTEND_URL"),
+        "https://" + os.environ.get("DEPLOY_URL")
     ]
 
 
