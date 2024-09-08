@@ -17,7 +17,7 @@ services:
     buildCommand: |
       pipenv install --dev
       pipenv run python manage.py migrate
-      pipenv run python manage.py collectstatic
+      pipenv run python manage.py collectstatic --noinput
       pipenv run python manage.py shell -c "
       from django.contrib.auth import get_user_model;
       User = get_user_model();

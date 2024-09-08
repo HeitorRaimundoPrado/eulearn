@@ -39,7 +39,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message = data['message']
         sender_id = self.scope['user'].id
-        print(self.scope['user'].id)
         recipient_id = self.scope['url_route']['kwargs']['receiver_id']
 
         message = await self.create_new_message(sender_id, recipient_id, message)

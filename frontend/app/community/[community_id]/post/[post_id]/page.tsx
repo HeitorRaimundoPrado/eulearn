@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react'
-import { apiGet } from '@/utils/api'
-import VoteButtons from '@/components/VoteButtons'
+import { useEffect, useState } from 'react';
+import { apiGet } from '@/utils/api';
+import VoteButtons from '@/components/VoteButtons';
+import { RichText } from '@/components/TextEditor';
 
 interface Post {
   id: number;
@@ -41,7 +42,7 @@ export default function Page({ params }: PageProps) {
   return (
     <div>
       <h1>{post.title}</h1>
-      <p>{post.content}</p>
+      <RichText value={JSON.parse(post.content)} withImages={true}/>
       <VoteButtons post={post.id} net_votes={post.net_votes} className="your-class-name" />
     </div>
   );

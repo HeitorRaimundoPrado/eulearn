@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from subjects.serializers import PostSerializer
 from .permissions import IsMemberOfCommunity
 from .serializers import CommunitySerializer
@@ -10,9 +11,13 @@ from subjects.models import ForumPost
 from .models import Community
 
 # Create your views here.
+class CommunityPostPaginationClass(PageNumberPagination):
+    page_size = 40
+
 class CommunityPostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsMemberOfCommunity]
+    pagination_class = CommunityPostPaginationClass
 
     def get_queryset(self):
         community_id = self.kwargs.get('community_id')
@@ -37,7 +42,6 @@ class CommunityListCreateView(generics.ListCreateAPIView):
 
         community.users_joined.add(self.request.user)
         community.creator = self.request.user
-        print('here')
         return community.save()
 
 

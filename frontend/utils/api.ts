@@ -99,7 +99,7 @@ export async function apiGet(route: string) {
   return makeRequest(route, "GET");
 }
 
-export async function apiPost(route: string, body: any, isFormData: boolean = true) {
+export async function apiPost(route: string, body: any, isFormData: boolean = false) {
   return makeRequest(route, "POST",  false, body, isFormData)
 }
 

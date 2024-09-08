@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { apiGet } from '@/utils/api'
+import PostLink from '@/components/PostLink'
 import Subject from '@/interfaces/Subject'
-
 
 interface Post {
   id: number;
@@ -61,10 +61,7 @@ export default function Home() {
                   posts[subject.id] &&
                   posts[subject.id].map(post => {
                     return (
-                      <Link key={post.id} href={`/subject/${subject.id}/forum/post/${post.id}`} className="mb-6 border-2 border-white rounded-md border-opacity-[20%] w-[80%] p-4">
-                        <h3 className="font-bold mb-2 text-2xl">{post.title}</h3>
-                        <p className="line-clamp-4 text-justify opacity-[60%]">{post.content}</p>
-                      </Link>
+                      <PostLink post={post} href={`/subject/${subject.id}/forum/post/${post.id}`} className="w-[80%]"/>
                     )
                   })
                 }
@@ -99,17 +96,13 @@ export default function Home() {
           <h2 className="mb-4">Disclaimer de Teste</h2>
 
           <p>Esta é uma versão de testes do aplicativo, e todos os dados inseridos ou gerados durante o uso estão sujeitos a serem apagados ou modificados a qualquer momento, sem aviso prévio. Isso inclui, mas não se limita a, dados de cadastro, mensagens, posts, arquivos anexados e qualquer outro conteúdo fornecido ou criado pelos usuários.</p>
-
           <p>A finalidade desta versão é a realização de testes de funcionalidade, desempenho e segurança. Portanto, não recomendamos o uso deste aplicativo para fins críticos ou armazenamento de informações sensíveis.</p>
-
           <p>Ao utilizar esta versão de testes, você reconhece e concorda que:</p>
 
           <ul className="list-disc ml-6 pt-4">
             <li><p>Não há garantia de retenção ou segurança dos dados.</p></li>
             <li><p>Nenhum suporte ou recuperação de dados será fornecido caso ocorra a perda de dados.</p></li>
             <li><p>O uso do aplicativo é feito por sua própria conta e risco.</p></li>
-
-
           </ul>
           <p className="mt-2">Obrigado por contribuir para o desenvolvimento e aprimoramento do nosso aplicativo!</p>
         </div>

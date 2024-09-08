@@ -26,7 +26,6 @@ class BookmarkSerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
 
     def validate(self, data):
-        print("calling validate")
         return data
 
 

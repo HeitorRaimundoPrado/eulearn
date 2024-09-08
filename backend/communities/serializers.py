@@ -5,8 +5,7 @@ from subjects.serializers import PostSerializer
 
 
 class CommunitySerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    posts = PostSerializer(many=True, read_only=True)
+    password = serializers.CharField(write_only=True, allow_blank=True, required=False)
     current_user_is_member = serializers.SerializerMethodField()
 
     class Meta:
@@ -20,7 +19,8 @@ class CommunitySerializer(serializers.ModelSerializer):
     def create(self, data):
         password = data.pop('password')
         community = Community.objects.create(**data)
-        community.set_password(password)
+        if password:
+            community.set_password(password)
         return community
 
     def to_representation(self, instance):

@@ -213,7 +213,8 @@ STORAGES = {
             "secret_key": os.environ.get("S3_SECRET_KEY"),
             "bucket_name": os.environ.get("S3_BUCKET_NAME"),
             "endpoint_url": os.environ.get("S3_ENDPOINT"),
-            "default_acl": None,
+            "signature_version": "s3v4",
+            "default_acl": "private",
             "file_overwrite": False
         },
     },
@@ -225,7 +226,8 @@ STORAGES = {
             "secret_key": os.environ.get("S3_SECRET_KEY"),
             "bucket_name": os.environ.get("S3_BUCKET_NAME_STATIC"),
             "endpoint_url": os.environ.get("S3_ENDPOINT"),
-            "default_acl": None,
+            "default_acl": "private",
+            "signature_version": "s3v4",
             "file_overwrite": False
         }
     },
@@ -241,28 +243,6 @@ CACHES = {
         }
     }
 
-}
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'backend.custom_debug': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
 }
 
 AUTH_USER_MODDEL = 'user.CustomUser'
