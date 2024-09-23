@@ -80,6 +80,7 @@ export default function Page({ params }: { params: Params }) {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full">
+        <h1 className="font-bold ml-4 mb-4">Criar Lista de Exercícios</h1>
         <div className="w-full">
           <Input type="text" placeholder="Título" onChange={(e) => setNewTest({...newTest, title: e.target.value})} className="mb-4 w-[60%]"/>
         </div>
@@ -105,6 +106,7 @@ export default function Page({ params }: { params: Params }) {
         </div>
       </div>
 
+      <h2 className="my-4 font-bold">Criação de uma nova questão</h2>
       {
         newQuestion ?
           <CreateQuestion subjId={subjId ?? ''} createQuestionCallback={handleCreateNewQuestion}/>
@@ -114,6 +116,10 @@ export default function Page({ params }: { params: Params }) {
 
 
       <div className="my-2">
+        {
+          subjQuestions.length > 0 &&
+          <h2 className="font-bold my-4">Questões já existentes no Banco de Dados</h2>
+        }
         {
           subjQuestions.map(question => {
             return (

@@ -28,6 +28,50 @@ export interface Subject {
 	name: string;
 }
 
+interface ContextDisciplineProps {
+	pathname: string;
+}
+
+function ContextDiscipline({ pathname }: ContextDisciplineProps) {
+
+	return (
+		<div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
+			<Link href="/" >
+				<p className={`h-9 w-full rounded-r-lg pl-4
+					flex justify-left items-center 
+					text-sm font-normal duration-200
+					${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+					Fórum Principal
+				</p>
+			</Link>
+			<Link href="/" >
+				<p className={`h-9 w-full rounded-r-lg pl-4
+					flex justify-left items-center 
+					text-sm font-normal 
+					${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+					Exercícios resolvidos
+				</p>
+			</Link>
+			<Link href="/" >
+				<p className={`h-9 w-full rounded-r-lg pl-4
+					flex justify-left items-center 
+					text-sm font-normal 
+					${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+					Lista de exercícios
+				</p>
+			</Link>
+			<Link href="/" >
+				<p className={`h-9 w-full rounded-r-lg pl-4
+					flex justify-left items-center 
+					text-sm font-normal 
+					${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
+					Fórum informal
+				</p>
+			</Link>
+		</div>
+	)
+}
+
 export default function Page() {
 	const [subjects, setSubjects] = useState<Subject[]>([])
 	const pathname = usePathname();
@@ -40,7 +84,6 @@ export default function Page() {
 		apiGet("subjects")
 			.then(data => {
 				setSubjects(data)
-				console.log('here')
 			})
 			.catch(err => alert(err))
 
@@ -48,8 +91,9 @@ export default function Page() {
 	}, [])
 
 	const handleClick = (index: number | null) => {
-		setOpen(open === index ? null : index);
+		setOpen((old) => old === index ? null : index);
 	};
+
 
 
 	return (
@@ -123,14 +167,14 @@ export default function Page() {
 									<PiListPlusLight className="w-5 h-5" />
 							}
 							<p className='text-sm font-normal'>
-								Criar lista de exercícios
+								Criar lista	({subject.name})
 							</p>
 						</Link>
 					))
 				}
 			</div>
 
-			<div className=" pb-0 border-b-[1px] border-white-20">
+			<div className=" pb-0 border-b-[1px] border-white-20 flex flex-col">
 				<h2 className="w-full opacity-[40%] px-4 py-2">DISCIPLINAS</h2>
 				{/*{
 						subjects.map(subj => {
@@ -144,70 +188,47 @@ export default function Page() {
 							)
 						})
 					}*/}
-				<ul>
-					<ul>
-						<li
-							className={`h-10 w-full rounded-lg px-4
-								flex flex-row justify-between items-center
-								hover:text-white-100 duration-200 
-								${open === 0 ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
-								duration-200 cursor-pointer`}
-							onClick={() => handleClick(0)}
-						>
-							{
-								subjects.map(subj => (
-									<Link key={subj.id} href={`/subject/${subj.id}`} className="flex flex-row items-center justify-between w-full">
-										<p className="text-sm font-normal">
-											# {subj.name}
-										</p>
-										{pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />}
-									</Link>
-								))
-							}
-						</li>
+				<ul className="flex flex-col">
+					{
+						subjects.map((subj, idx) => (
 
-						<div
-							style={{ display: open === 0 ? 'block' : 'none' }}
-							className="w-full py-3"
-						>
-							<div className='flex flex-col gap-3 border-solid border-white-20 border-l-[1px] ml-3'>
-								<Link href="/" >
-									<p className={`h-9 w-full rounded-r-lg pl-4
-										flex justify-left items-center 
-										text-sm font-normal duration-200
-										${pathname == '/' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-										Fórum Principal
+							<li
+								className={`py-3 w-full rounded-lg px-4
+									flex flex-col justify-between items-center
+									hover:text-white-100 duration-200 
+									${open === idx ? 'bg-white-10 text-white' : 'text-white-80 hover:bg-white-5'}
+									duration-200 cursor-pointer`}
+								onClick={() => handleClick(idx)}
+							>
+								<Link key={subj.id} href={`/subject/${subj.id}`} className="flex flex-row items-center justify-between w-full">
+									<p className="text-sm font-normal">
+										# {subj.name}
 									</p>
+									{/* {pathname == `/subject/${subj.id}` ? <SlArrowDown className="w-3 h-3" /> : <SlArrowUp className="w-3 h-3" />} */}
+									{
+										open === idx ?
+											<SlArrowDown className="w-3 h-3" />
+											:
+											<SlArrowUp className="w-3 h-3" />
+									}
 								</Link>
-								<Link href="/" >
-									<p className={`h-9 w-full rounded-r-lg pl-4
-										flex justify-left items-center 
-										text-sm font-normal 
-										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-										Exercícios resolvidos
-									</p>
-								</Link>
-								<Link href="/" >
-									<p className={`h-9 w-full rounded-r-lg pl-4
-										flex justify-left items-center 
-										text-sm font-normal 
-										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-										Lista de exercícios
-									</p>
-								</Link>
-								<Link href="/" >
-									<p className={`h-9 w-full rounded-r-lg pl-4
-										flex justify-left items-center 
-										text-sm font-normal 
-										${pathname == '/tt' ? 'bg-white-10 hover:bg-white-10 text-white-100' : 'text-white-80 hover:bg-white-5'}`}>
-										Fórum informal
-									</p>
-								</Link>
-							</div>
-
-						</div>
-					</ul>
+								{
+									open === idx &&
+									<div className="my-2">
+										<ContextDiscipline pathname={pathname} />
+									</div>
+								}
+							</li>
+						))
+					}
 				</ul>
+
+				<div
+					style={{ display: open === 0 ? 'block' : 'none' }}
+					className="w-full py-3"
+				>
+
+				</div>
 				<SlArrowDown className="h-6 w-6 pb-2 opacity-[20%] m-auto cursor-pointer" />
 			</div>
 
