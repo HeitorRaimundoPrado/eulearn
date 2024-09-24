@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from django.views import View
+from django.http import JsonResponse
 from .models import Message, Attachment
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView

@@ -1,11 +1,12 @@
-import { 
+"use client"
+import {
   useState,
   useCallback,
   useMemo,
   ChangeEvent,
   KeyboardEvent
 } from 'react';
-import { 
+import {
   createEditor,
   BaseEditor,
   Descendant,
@@ -21,7 +22,7 @@ import FileInput from './FileInput';
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] }
 type CustomText = { text: string }
-type ImageElement = { 
+type ImageElement = {
   type: string;
   url: string;
   file_name: string;
@@ -45,12 +46,12 @@ const initialValue: CustomElement[] = [
 
 const ImageElement = (props: { attributes: any, element: any, children: any }) => {
   return (
-  <div {...props.attributes} className="flex">
-    <div contentEditable={false} className="relative">
-      <img src={props.element.url}/>
+    <div {...props.attributes} className="flex">
+      <div contentEditable={false} className="relative">
+        <img src={props.element.url} />
+      </div>
+      {props.children}
     </div>
-    {props.children}
-  </div>
   )
 
 }
@@ -70,13 +71,13 @@ const withImage = (editor: Editor) => {
   return editor;
 }
 
-export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) => void, className?: string}) {
+export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) => void, className?: string }) {
   const [editor] = useState(() => withImage((withReact(createEditor()))))
   const [files, setFiles] = useState<File[]>([])
 
   const insertImage = (editor: Editor, url: string, file_name: string) => {
     const text = { text: '' }
-    const image: ImageElement = { 
+    const image: ImageElement = {
       type: 'image',
       url,
       file_name,
@@ -90,12 +91,12 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
     })
   }
 
-  const renderElement = useCallback((props: { attributes: any, children: any, element: any}) => {
-    switch(props.element.type) {
+  const renderElement = useCallback((props: { attributes: any, children: any, element: any }) => {
+    switch (props.element.type) {
       case "image":
-        return <ImageElement {...props}/>
+        return <ImageElement {...props} />
       default:
-        return <DefaultElement {...props}/>
+        return <DefaultElement {...props} />
     }
   }, [])
 
@@ -109,14 +110,14 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-        const file = e.target.files[0]
-        const fileSplit = file.name.split('.')
-        const baseName = fileSplit.slice(0, -1)
-        const ext = fileSplit[fileSplit.length - 1]
+      const file = e.target.files[0]
+      const fileSplit = file.name.split('.')
+      const baseName = fileSplit.slice(0, -1)
+      const ext = fileSplit[fileSplit.length - 1]
 
-        setFiles(oldFiles =>  [...oldFiles, file])
-        const newFileName = baseName + '-' +  files.length.toString() + '.' + ext
-        insertImage(editor, URL.createObjectURL(new File([file], newFileName)), newFileName)
+      setFiles(oldFiles => [...oldFiles, file])
+      const newFileName = baseName + '-' + files.length.toString() + '.' + ext
+      insertImage(editor, URL.createObjectURL(new File([file], newFileName)), newFileName)
     }
   }
 
@@ -128,25 +129,25 @@ export default function TextEditor({ onChange }: { onChange: (newValue: Node[]) 
 
       if (matches.length > 0) {
         const removePositions = matches.map(match => match[1])
-        removePositions.sort((a, b) => b[b.length - 1] - a[a.length -1]);
+        removePositions.sort((a, b) => b[b.length - 1] - a[a.length - 1]);
 
         removePositions.forEach(pos => {
           console.log(pos)
-          Transforms.removeNodes(editor, { at: pos  });
+          Transforms.removeNodes(editor, { at: pos });
         })
       }
     }
   };
 
   return (
-      <div>
-        <div className="rounded-t-md border-2 border-b-0 border-white-20 p-2">
-          <FileInput onChange={handleFileChange} accept="png,jpg,jpeg"/>
-        </div>
-        <Slate editor={editor} initialValue={initialValue} onChange={handleChange} >
-          <Editable onKeyDown={handleKeyDown} renderElement={renderElement} className="outline-none p-2 border-2 border-white-20 focus:border-primary rounded-b-md transition-all ease-in-out duration-200"/>
-        </Slate>
+    <div>
+      <div className="rounded-t-md border-2 border-b-0 border-white-20 p-2">
+        <FileInput onChange={handleFileChange} accept="png,jpg,jpeg" />
       </div>
+      <Slate editor={editor} initialValue={initialValue} onChange={handleChange} >
+        <Editable onKeyDown={handleKeyDown} renderElement={renderElement} className="outline-none p-2 border-2 border-white-20 focus:border-primary rounded-b-md transition-all ease-in-out duration-200" />
+      </Slate>
+    </div>
   )
 }
 
@@ -156,26 +157,26 @@ interface RichTextProps {
   withImages?: boolean;
 }
 
-export function RichText({ value , className="", withImages=false }: RichTextProps) {
+export function RichText({ value, className = "", withImages = false }: RichTextProps) {
   const editor = useMemo(() => withReact(createEditor()), []);
 
-  const renderElement = useCallback((props: { attributes: any, children: any, element: any}) => {
-    switch(props.element.type) {
+  const renderElement = useCallback((props: { attributes: any, children: any, element: any }) => {
+    switch (props.element.type) {
       case "image":
         return withImages ? (
-          <ImageElement {...props}/>
+          <ImageElement {...props} />
         ) : (
           <span>[image]</span>
         )
 
       default:
-        return <DefaultElement {...props}/>
+        return <DefaultElement {...props} />
     }
   }, [])
 
   return (
     <Slate editor={editor} initialValue={value}>
-      <Editable renderElement={renderElement} readOnly className={className}/>
+      <Editable renderElement={renderElement} readOnly className={className} />
     </Slate>
   );
 }

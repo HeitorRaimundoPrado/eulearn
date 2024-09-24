@@ -16,6 +16,8 @@ boto3 = "*"
 django-redis = "*"
 django-storages = {extras = ["boto3"], version = "*"}
 dj-database-url = "*"
+django-types = "*"
+djangorestframework-types = "*"
 
 [dev-packages]
 
